@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Information;
+use App\Models\Teacher;
+use App\Models\TeacherInformation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,5 +57,27 @@ class User extends Authenticatable
 
     public function information() :HasOne{
         return $this->hasOne(Information::class, 'user_id');
+    }
+
+    /**
+     * Relationship to the Department.
+     * A user (like a teacher, dean, or student) belongs to a department.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'dean_id');
+    }
+    /**
+     * Relationship to the Department.
+     * A user (like a teacher, dean, or student) belongs to a department.
+     */
+    public function teachers()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
+
+    public function teacherInformation() :HasOne
+    {
+        return $this->hasOne(TeacherInformation::class, 'user_id');
     }
 }

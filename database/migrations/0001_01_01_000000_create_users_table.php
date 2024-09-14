@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('role')->default('student');
+            $table->enum('role', ['admin', 'student', 'teacher', 'registrar', 'cashier', 'dean'])->default('student');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        $roles = ['admin','teacher','student'];
+        $roles = ['admin'];
         foreach ($roles as $key => $r) {
             User::factory()->create([
                 'role' => $r,
                 'name' => ucwords($r.' Account'),
-                'email' => $r.'@example.com',
+                'email' => $r.'@goldengate.com',
             ]);  
         }
         // User::factory()->create([

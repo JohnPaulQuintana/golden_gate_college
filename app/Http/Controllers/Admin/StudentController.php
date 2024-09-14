@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Information;
 use App\Models\User;
+use App\Services\InitialService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,10 +13,17 @@ use Illuminate\Support\Facades\Redirect;
 
 class StudentController extends Controller
 {
+    protected $initialService;
+    // Inject the InitialService into the controller
+    public function __construct(InitialService $initialService)
+    {
+        $this->initialService = $initialService;
+    }
+    
     //display student form
     public function student(){
         $role = Auth::user()->role;
-        $initial = $this->initials(Auth::user()->name);
+        $initial = $this->initialService->getInitials(Auth::user()->name);
         return view($role.'.student.add', compact('initial'));
     }
 
@@ -64,15 +72,5 @@ class StudentController extends Controller
         return Redirect::route('admin.student')->with(['status'=>'success','message'=>'You added '.$fullname.' on our record!']);
     }
 
-    //return initial name JD
-    private function initials($name){
-        $n = $name; // Get the user's full name
-        $initials = collect(explode(' ', $n)) // Split name by spaces
-                    ->map(function($word) { // Get the first letter of each word
-                        return strtoupper(substr($word, 0, 1));
-                    })->implode(''); // Join the initials
 
-        return $initials; // Output: JD
-
-    }
 }

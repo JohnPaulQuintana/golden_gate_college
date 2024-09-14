@@ -54,6 +54,8 @@
         <div class="min-h-screen bg-gray-100">
             @if (Auth::user()->role === 'admin')
                 @include('layouts.admin-navigation')
+            @elseif (Auth::user()->role === 'dean')
+                @include('layouts.dean-navigation')
             @elseif (Auth::user()->role === 'student')
                 @include('layouts.student-navigation')
             @endif
