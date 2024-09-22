@@ -4,10 +4,16 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dean\DeanController;
+use App\Http\Controllers\Dean\ProgramController;
+use App\Http\Controllers\Dean\SemesterController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Registrar\RegistrarProgramController;
+// use App\Http\Controllers\Registrar\ProgramController;
 use App\Http\Controllers\Roles\RoleController;
+use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -49,17 +55,35 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
          // add teacher
          Route::get('teacher',[DeanController::class, 'teacher'])->name('teacher');
          Route::post('add/teacher',[DeanController::class, 'addTeacher'])->name('add.teacher');
+        //  manage program
+        Route::get('academic',[DeanController::class, 'academic'])->name('academic');
+        Route::post('semester',[DeanController::class, 'semester'])->name('semester');
+        // Semester Controller
+        Route::get('semester/manage/{abbrev}',[SemesterController::class, 'manageAcademicYear'])->name('semester.manage');
+        Route::post('semester/manage/update',[SemesterController::class, 'updateAcademicYear'])->name('semester.manage.update');
+        Route::get('semester/manage/delete/{id}',[SemesterController::class, 'delete'])->name('semester.manage.delete');
+        
+        Route::get('program',[ProgramController::class, 'program'])->name('program');
+        Route::post('program/add',[ProgramController::class, 'addProgram'])->name('program.add');
+    });
+
+    // Registrar Routes
+    Route::group(['prefix' => 'registrar', 'middleware' => ['role:registrar'], 'as' => 'registrar.'], function () {
+        Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+        Route::get('/program',[RegistrarProgramController::class, 'program'])->name('program');
     });
 
     // Student Routes
     Route::group(['prefix' => 'student', 'middleware' => ['role:student'], 'as' => 'student.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+        
     });
 
     // Teacher Routes
     Route::group(['prefix' => 'teacher', 'middleware' => ['role:teacher'], 'as' => 'teacher.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
     });
+    
 });
 
 

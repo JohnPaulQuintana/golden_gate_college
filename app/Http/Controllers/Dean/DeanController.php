@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Dean;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
 use App\Models\Department;
+use App\Models\Program;
+use App\Models\Semester;
 use App\Models\Teacher;
 use App\Models\TeacherInformation;
 use App\Models\User;
+use App\Rules\YearDifference;
+use App\Services\AbbreviationService;
 use App\Services\InitialService;
 use App\Services\TeacherService;
 use Illuminate\Http\Request;
@@ -20,11 +25,14 @@ class DeanController extends Controller
     //
     protected $initialService;
     protected $teacherService;
-    public function __construct(InitialService $initialService, TeacherService $teacherService)
+    protected $abbreviationService;
+    public function __construct(InitialService $initialService, TeacherService $teacherService, AbbreviationService $abbreviationService)
     {
         $this->initialService = $initialService;
         $this->teacherService = $teacherService;
+        $this->abbreviationService = $abbreviationService;
     }
+
     public function teacher()
     {
         $dept_id = Department::where('dean_id',Auth::user()->id)->first();
@@ -34,6 +42,22 @@ class DeanController extends Controller
         // dd($teachers);
         return view('dean.teachers.add', compact('initial', 'teachers'));
     }
+
+    //display academic
+    public function academic()
+    {
+        $dept_id = Department::where('dean_id',Auth::user()->id)->first();
+        // dd($dept_id);
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+        $academicYears = AcademicYear::with('semesters')->where('user_id', Auth::user()->id)->paginate(10);
+        
+        // dd($academicYears);
+        $programs = Program::where('user_id',Auth::user()->id)->get();
+        return view('dean.academic.manage', compact('initial', 'academicYears', 'programs'));
+    }
+
+    
+    
 
     //add teacher
     public function addTeacher(Request $request)
@@ -95,5 +119,58 @@ class DeanController extends Controller
                 return Redirect::route('dean.teacher')->with(['status'=>'success','message'=>'You added '.$validatedTeacher['firstname'].' '.$validatedTeacher['lastname'].' on our record!']);
             }
         }
+    }
+
+    //add semester
+    public function semester(Request $request)
+    {
+        // dd($request);
+        $validatedAcademicYear = $request->validate([
+            'starting_year' => 'required|integer',
+            'end_year' => ['required', 'integer', new YearDifference],
+            'semester' => 'required',
+            'program' => 'required',
+            'status' => 'required',
+        ]);
+
+        if($validatedAcademicYear)
+        {
+            $existing_academic_year = AcademicYear::where('academic_year', $validatedAcademicYear['starting_year'].'-'.$validatedAcademicYear['end_year'])->first();
+            // dd($existing_academic_year);
+            if(!$existing_academic_year){
+                $ay = AcademicYear::create([
+                    'user_id' => Auth::user()->id,
+                    'academic_year' => $validatedAcademicYear['starting_year'].'-'.$validatedAcademicYear['end_year'],
+                    'status' => $validatedAcademicYear['status'],
+                ]);
+                if($ay){
+                    Semester::create([
+                        'academic_year_id' => $ay->id,
+                        'name' => $validatedAcademicYear['semester'],
+                        'abbrev' => $validatedAcademicYear['program']
+                    ]);
+                }
+            }else{
+                //check if has already has a semester
+                $existing_semester = Semester::where('academic_year_id',$existing_academic_year->id)->where('name',$validatedAcademicYear['semester'])->where('abbrev', $validatedAcademicYear['program'])->first();
+                if(!$existing_semester){
+                    Semester::create([
+                        'academic_year_id' => $existing_academic_year->id,
+                        'name' => $validatedAcademicYear['semester'],
+                        'abbrev' => $validatedAcademicYear['program']
+                    ]);
+                }else{
+                    throw ValidationException::withMessages([
+                        'semester' => 'The semester for '.$validatedAcademicYear['program'].' already exists. Please choose a semester.',
+                    ]);
+                }
+                // throw ValidationException::withMessages([
+                //     'starting_year' => 'The starting year already exists. Please choose a starting year.',
+                //     'end_year' => 'The end year already exists. Please choose a end year.',
+                // ]);
+            }
+        }
+
+        return Redirect::route('dean.academic')->with(['status'=>'success','message'=>'You added academic year '.$validatedAcademicYear['starting_year'].'-'.$validatedAcademicYear['end_year'].' - '.$validatedAcademicYear['semester'].'semester on our record!']);
     }
 }

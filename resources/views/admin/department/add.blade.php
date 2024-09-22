@@ -8,7 +8,7 @@
                     {{ __("Add Department") }} 
                 </div>
 
-                <div class="hs-dropdown relative inline-flex">
+                <div class="hs-dropdown relative z-[999] inline-flex">
                     <button id="hs-dropdown-custom-trigger" type="button" class="hs-dropdown-toggle py-1 ps-1 pe-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-full focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                       {{-- <img class="w-8 h-auto rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80" alt="Avatar"> --}}
                       <span class="w-10 h-10 border text-xl border-[#bc9c22] bg-[#bc9c22] rounded-full flex justify-center items-center font-bold text-green">{{ $initial }}</span>
@@ -39,7 +39,7 @@
             {{-- analytics --}}
             <div class="overflow-hidden shadow-sm rounded p-2">
                 
-                <form action="{{ route('admin.add.department') }}" method="post">
+                <form action="{{ route('admin.add.department') }}" method="post" class="mb-2">
                     @csrf
                     <div class="flex flex-col max-w-full mb-2">
                         <span class="font-bold text-green uppercase tracking-wider">Department Information</span>
@@ -61,7 +61,7 @@
                                         </div>
                                     @enderror
                                 </div>
-                                {{-- Last Name --}}
+                                {{-- teacher --}}
                                 <div class="flex-1 space-y-3"> 
                                     <!-- Select -->
                                     <select data-hs-select='{
@@ -91,6 +91,37 @@
                                         </div>
                                     @enderror
                                 </div>
+                                {{-- role --}}
+                                <div class="flex-1 space-y-3"> 
+                                    <!-- Select -->
+                                    <select data-hs-select='{
+                                        "placeholder": "Select Role",
+                                        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"><span class=\"me-2\" data-icon></span><span class=\"text-gray-800 dark:text-neutral-200 \" data-title></span></button>",
+                                        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-neutral-600",
+                                        "dropdownClasses": "mt-2 max-h-72 p-1 space-y-0.5 z-50 w-full bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
+                                        "optionClasses": "py-2 px-3 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
+                                        "optionTemplate": "<div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div><div class=\"hs-selected:font-semibold text-sm text-gray-800 dark:text-neutral-200 \" data-title></div></div><div class=\"ms-auto\"><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-blue-600\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z\"/></svg></span></div></div>",
+                                        "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+                                    }' class="hidden uppercase" name="role">
+                                        <option value="">Choose</option>
+                                        @foreach ($teachersRole as $role)
+                                            <option value="{{ $role }}" 
+                                                @if (old('role') == $role) selected @endif
+                                                >
+                                                {{ $role }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    <!-- End Select -->
+                                    <!-- End Select -->
+                                    @error('role')
+                                        <div class="flex gap-2 items-center"> 
+                                            <svg class="shrink-0 size-4 text-red-500" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 512 512" fill="currentColor" stroke="currentColor"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
+                                            <span class="text-sm text-red-500">{{ $message }}</span>
+                                        </div>
+                                    @enderror
+                                </div>
                                 
                             </div>
                         </div>
@@ -102,13 +133,14 @@
                     <button type="submit" class="bg-sidebar p-2 text-white rounded-md hover:bg-green">Add Department</button>
                 </form>
 
+                @include('admin.table.department',['departments'=>$departments])
             </div>
 
-            {{-- tables --}}
-            @include('admin.table.department',['departments'=>$departments])
+            
         </div>
+        
     </div>
-
+    
     @section('scripts')
         <script>
             $(document).ready(function(){

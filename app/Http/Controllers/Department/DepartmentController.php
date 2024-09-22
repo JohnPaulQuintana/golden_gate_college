@@ -34,10 +34,11 @@ class DepartmentController extends Controller
         $initial = $this->initialService->getInitials(Auth::user()->name);
         //used for select dropdown
         $teachers = $this->teacherService->getTeachers();
+        $teachersRole = $this->teacherService->getTeachersRole();
         //return department with dean and associated teachers
         $departments = $this->departmentService->getDepartments();
         // dd($departments);
-        return view('admin.department.add', compact('initial','teachers','departments'));
+        return view('admin.department.add', compact('initial','teachers','departments','teachersRole'));
     }
     //insert department
     public function addDepartment(Request $request)
@@ -46,7 +47,9 @@ class DepartmentController extends Controller
         $validatedDepartment = $request->validate([
             'department_name' => 'required|string|max:255',
             'dean_id' => 'required|exists:users,id',
+            'role' => 'required|string|',
         ], [
+            'role.required' => 'The role is required.',
             'department_name.required' => 'The department name is required.',
             'department_name.string' => 'The department name must be a valid string.',
             'department_name.max' => 'The department name may not be greater than 255 characters.',
@@ -77,7 +80,7 @@ class DepartmentController extends Controller
         if ($department) {
             // Update the user's role to 'dean'
             User::find($validatedDepartment['dean_id'])->update([
-                'role' => 'dean',
+                'role' => $validatedDepartment['role'],
             ]);
         }
 

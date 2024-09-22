@@ -4,7 +4,7 @@
             {{-- header --}}
             <div class="bg-sidebar overflow-hidden shadow-sm mb-2 sm:rounded-lg flex flex-col md:flex-row justify-between items-center">
                 <div class="p-4 text-white text-xl">
-                    {{ __("Welcome Dean!") }} 
+                    {{ __("Welcome Registrar") }} 
                 </div>
 
                 <div class="hs-dropdown relative z-[999] inline-flex">

@@ -1,10 +1,11 @@
 <x-app-layout>
+
     <div class="w-full">
         <div class="mx-auto">
             {{-- header --}}
             <div class="bg-sidebar overflow-hidden shadow-sm mb-2 sm:rounded-lg flex flex-col md:flex-row justify-between items-center">
                 <div class="p-4 text-white text-xl">
-                    {{ __("Welcome Dean!") }} 
+                    {{ __("Available Programs") }} 
                 </div>
 
                 <div class="hs-dropdown relative z-[999] inline-flex">
@@ -34,6 +35,36 @@
                     </div>
                 </div>
             </div>
+
+            {{-- analytics --}}
+            <div class="overflow-hidden shadow-sm rounded p-2">
+                
+                @include('registrar.card.program', ['programs' => $programs])
+
+            </div>
         </div>
     </div>
+
+    @section('scripts')
+        <script>
+            $(document).ready(function(){
+                console.log('adding student connected...')
+                $status = @json(session('status'));
+                $message = @json(session('message'));
+
+                //popup message
+                const sessionMessage = (s,m) => {
+                    Swal.fire({
+                        title: "Added Successfully!",
+                        text: m,
+                        icon: s
+                    });
+                }
+
+                if($status !== null){
+                    sessionMessage($status, $message)
+                }
+            })
+        </script>
+    @endsection
 </x-app-layout>

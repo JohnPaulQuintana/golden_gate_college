@@ -42,4 +42,16 @@ class TeacherService
         $designatedTeachers = Teacher::with('users')->where('department_id',$dept_id)->latest()->paginate(10);
         return $designatedTeachers; // Output: JD
     }
+
+    /**
+     * Generate initials from a name.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getTeachersRole()
+    {
+        $staticRoles = ['dean','registrar','cashier'];
+        return $staticRoles; // Output: JD
+    }
 }
