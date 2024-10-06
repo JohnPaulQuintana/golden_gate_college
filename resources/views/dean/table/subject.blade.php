@@ -17,7 +17,7 @@
                                 Latest History
                             </h2>
                             <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                List of added <span class="font-bold">academic years</span> .
+                                List of added <span class="font-bold">subjects</span> .
                             </p>
                         </div>
 
@@ -160,7 +160,7 @@
                     <!-- End Header -->
 
                     <!-- Table -->
-                    <table id="baji_table" class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                    <table id="subject_table" class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                         <thead class="bg-gray-50 dark:bg-neutral-800">
                             <tr>
 
@@ -175,7 +175,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Academic Year
+                                            Subject Code
                                         </span>
                                     </div>
                                 </th>
@@ -184,7 +184,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Semester
+                                            Subject Name
                                         </span>
                                     </div>
                                 </th>
@@ -193,29 +193,18 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Program
+                                            Credits
                                         </span>
                                     </div>
                                 </th>
-
                                 <th scope="col" class="px-6 py-3 text-start">
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Status
+                                            Created_at
                                         </span>
                                     </div>
                                 </th>
-
-                                {{-- <th scope="col" class="px-6 py-3 text-start">
-                                    <div class="flex items-center gap-x-2">
-                                        <span
-                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Associated Teachers
-                                        </span>
-                                    </div>
-                                </th> --}}
-
                                 
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
@@ -233,7 +222,7 @@
 
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                             
-                            @foreach ($academicYears as $acad)
+                            @foreach ($subjects as $subject)
                                 {{-- {{ $teacher }} --}}
                                 <tr class="@if($loop->odd) bg-green-50 dark:bg-neutral-800 @else bg-white dark:bg-neutral-900 @endif">
 
@@ -248,7 +237,7 @@
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
                                         <div class="px-6 py-3">
-                                            {{ $acad->academic_year }}
+                                            {{ $subject->subject_code }}
                                         </div>
                                     </td>
 
@@ -257,9 +246,9 @@
                                             <span
                                                 class="text-sm font-semibold w-fit rounded-md px-2 text-gray-800 dark:text-neutral-200">
                                                <div class="flex flex-col gap-1 justify-items-center items-center">
-                                                    @foreach ($acad->semesters as $sem)
-                                                        <span class="bg-red-500 px-1 capitalize rounded-md text-white text-xs">{{ $sem->name }} Semester</span> 
-                                                    @endforeach
+                                                    
+                                                    <span class="bg-red-500 px-1 capitalize rounded-md text-white text-xs">{{ $subject->subject_name }}</span> 
+                                                  
                                                </div>
                                             </span>
                                         </div>
@@ -270,14 +259,9 @@
                                             <span
                                                 class="text-sm font-semibold w-fit rounded-md px-2 text-gray-800 dark:text-neutral-200">
                                                <div class="flex flex-wrap gap-1">
-                                                    @foreach ($acad->semesters as $sem)
-                                                        @foreach ($programs as $item)
-                                                            @if ($sem->abbrev === $item->abbrev)
-                                                                <span class="bg-red-500 px-1 capitalize rounded-md text-white text-xs">{{ $item->program }}</span> 
-                                                            @endif
-                                                        @endforeach
+                                                   
+                                                    <span class="bg-red-500 px-1 capitalize rounded-md text-white text-xs">{{ $subject->credits }}</span> 
                                                         
-                                                    @endforeach
                                                </div>
                                             </span>
                                         </div>
@@ -286,7 +270,7 @@
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
                                         <div class="px-6 py-3">
-                                            {{ $acad->status }}
+                                            {{ $subject->created_at }}
                                         </div>
                                     </td>
 
@@ -294,31 +278,14 @@
                                         <div class="px-6 py-3">
                                             <span
                                                 class="block text-sm font-semibold w-fit rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                <div class="hs-dropdown relative z-50 inline-flex">
-                                                    <button id="hs-dropdown-with-icons" type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                                                      Actions
-                                                      <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                                                    </button>
-                                                  
-                                                    <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-1 space-y-0.5 mt-2 divide-y divide-gray-200 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700" role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-icons">
-                                                      <div class="py-2 first:pt-0 last:pb-0">
-                                                        {{-- <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
-                                                          <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                                                          Newsletter
-                                                        </a> --}}
-                                                        @foreach ($acad->semesters as $sem)
-                                                            @foreach ($programs as $item)
-                                                                @if ($sem->abbrev === $item->abbrev)
-                                                                    <a href="{{ route('dean.semester.manage', ['abbrev' => $item->abbrev, 'semester'=>$sem->name]) }}" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm uppercase text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700">
-                                                                        {{ $sem->name }} Semester - {{ $sem->abbrev }}
-                                                                    </a> 
-                                                                @endif
-                                                            @endforeach
-                                                            
-                                                        @endforeach
-                                                      </div>
-                                                    </div>
-                                                  </div>
+                                                <a href="#" 
+                                                    data-id="{{ $subject->id }}" 
+                                                    data-code="{{ $subject->subject_code }}" 
+                                                    data-name="{{ $subject->subject_name }}" 
+                                                    data-credits="{{ $subject->credits }}" 
+                                                    class="table_edit_subject_btn flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700">
+                                                    Edit
+                                                </a> 
                                             </span>
                                         </div>
                                     </td>
@@ -337,15 +304,15 @@
                         <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
                             <div>
                                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">{{ $academicYears->total() }}</span> results -
-                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">({{ $academicYears->count() }} on this page)</span>
+                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">{{ $subjects->total() }}</span> results -
+                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">({{ $subjects->count() }} on this page)</span>
                                 </p>
                             </div>
 
                             <div>
                                 <div class="inline-flex gap-x-2">
                                     {{-- Previous Button --}}
-                                    @if ($academicYears->onFirstPage())
+                                    @if ($subjects->onFirstPage())
                                         <button type="button" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm opacity-50 cursor-not-allowed dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:opacity-50">
                                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="m15 18-6-6 6-6" />
@@ -353,7 +320,7 @@
                                             Prev
                                         </button>
                                     @else
-                                        <a href="{{ $academicYears->previousPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                                        <a href="{{ $subjects->previousPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
                                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="m15 18-6-6 6-6" />
                                             </svg>
@@ -362,8 +329,8 @@
                                     @endif
 
                                     {{-- Next Button --}}
-                                    @if ($academicYears->hasMorePages())
-                                        <a href="{{ $academicYears->nextPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                                    @if ($subjects->hasMorePages())
+                                        <a href="{{ $subjects->nextPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
                                             Next
                                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="m9 18 6-6-6-6" />

@@ -6,13 +6,17 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dean\DeanController;
 use App\Http\Controllers\Dean\ProgramController;
 use App\Http\Controllers\Dean\SemesterController;
+use App\Http\Controllers\Dean\SubjectController;
+use App\Http\Controllers\Dean\YearLevelController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Registrar\RegistrarProgramController;
 // use App\Http\Controllers\Registrar\ProgramController;
+use App\Http\Controllers\Registrar\RegistrarProgramController;
 use App\Http\Controllers\Roles\RoleController;
+use App\Http\Controllers\Student\EnrollmentController;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -59,10 +63,20 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('academic',[DeanController::class, 'academic'])->name('academic');
         Route::post('semester',[DeanController::class, 'semester'])->name('semester');
         // Semester Controller
-        Route::get('semester/manage/{abbrev}',[SemesterController::class, 'manageAcademicYear'])->name('semester.manage');
+        Route::get('semester/manage/{abbrev}/{semester}',[SemesterController::class, 'manageAcademicYear'])->name('semester.manage');
         Route::post('semester/manage/update',[SemesterController::class, 'updateAcademicYear'])->name('semester.manage.update');
         Route::get('semester/manage/delete/{id}',[SemesterController::class, 'delete'])->name('semester.manage.delete');
         
+        // subjects
+        Route::get('subjects',[SubjectController::class, 'subject'])->name('subjects');
+        Route::post('subjects/store',[SubjectController::class, 'store'])->name('subjects.store');
+        Route::post('subjects/update',[SubjectController::class, 'update'])->name('subjects.update');
+        
+        //year level store
+        Route::post('year-level/store',[YearLevelController::class, 'store'])->name('level.store');
+        Route::post('year-level/update',[YearLevelController::class, 'update'])->name('level.update');
+        Route::get('subjects/destroy/{id}',[YearLevelController::class, 'destroy'])->name('subjects.destroy');
+
         Route::get('program',[ProgramController::class, 'program'])->name('program');
         Route::post('program/add',[ProgramController::class, 'addProgram'])->name('program.add');
     });
@@ -71,11 +85,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix' => 'registrar', 'middleware' => ['role:registrar'], 'as' => 'registrar.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
         Route::get('/program',[RegistrarProgramController::class, 'program'])->name('program');
+
+        // open program with created year level and subjects inside
+        Route::get('/program/enroll/{id}',[RegistrarProgramController::class, 'enroll'])->name('enroll');
     });
 
     // Student Routes
     Route::group(['prefix' => 'student', 'middleware' => ['role:student'], 'as' => 'student.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/form',[EnrollmentController::class, 'enrollment'])->name('dashboard.enrollment');
         
     });
 

@@ -107,6 +107,9 @@
                 </div>
 
                 <span class="font-bold ps-2 text-xl text-green">Subjects</span>
+                <div class="flex flex-wrap justify-center gap-2 items-center p-5 text-gray-500">
+                    <h1 class="text-xl">There's is no subject registered</h1>
+                </div>
             </div>
 
 

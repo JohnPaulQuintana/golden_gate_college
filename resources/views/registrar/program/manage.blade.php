@@ -38,7 +38,7 @@
 
             {{-- analytics --}}
             <div class="overflow-hidden shadow-sm rounded p-2">
-                
+                <span class="mb-2 text-green">Click the card to see more...</span>
                 @include('registrar.card.program', ['programs' => $programs])
 
             </div>
