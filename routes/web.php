@@ -9,13 +9,15 @@ use App\Http\Controllers\Dean\SemesterController;
 use App\Http\Controllers\Dean\SubjectController;
 use App\Http\Controllers\Dean\YearLevelController;
 use App\Http\Controllers\Department\DepartmentController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Notification\NotificationController;
 // use App\Http\Controllers\Registrar\ProgramController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Registrar\RegistrarProgramController;
 use App\Http\Controllers\Roles\RoleController;
 use App\Http\Controllers\Student\EnrollmentController;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -94,7 +96,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix' => 'student', 'middleware' => ['role:student'], 'as' => 'student.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/form',[EnrollmentController::class, 'enrollment'])->name('dashboard.enrollment');
+        Route::post('/dashboard/form/insert',[EnrollmentController::class, 'insert'])->name('dashboard.enrollment.insert');
         
+        Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
     });
 
     // Teacher Routes

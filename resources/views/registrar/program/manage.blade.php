@@ -38,9 +38,9 @@
 
             {{-- analytics --}}
             <div class="overflow-hidden shadow-sm rounded p-2">
-                <span class="mb-2 text-green">Click the card to see more...</span>
-                @include('registrar.card.program', ['programs' => $programs])
-
+                <span class="mb-2 text-green">Here is the list of online registration request...</span>
+                {{-- @include('registrar.card.program', ['programs' => $programs]) --}}
+                @include('registrar.table.registration', ['students' => $students])
             </div>
         </div>
     </div>

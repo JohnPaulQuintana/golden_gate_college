@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Registrar;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
+use App\Models\Enrollment;
 use App\Models\Program;
 use App\Models\Semester;
 use App\Models\subjects;
@@ -40,8 +41,11 @@ class RegistrarProgramController extends Controller
             }
             
         }
+
+        // get all registration
+        $students = Enrollment::where('status','in-process')->latest()->paginate(10);
         // dd($programs);
-        return view('registrar.program.manage', compact('initial', 'programs'));
+        return view('registrar.program.manage', compact('initial', 'programs','students'));
     }
 
     //enroll student
