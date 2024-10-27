@@ -60,6 +60,8 @@
                 @include('layouts.student-navigation')
             @elseif (Auth::user()->role === 'registrar')
                 @include('layouts.registrar-navigation')
+            @elseif (Auth::user()->role === 'cashier')
+                @include('layouts.cashier-navigation')
             @endif
             
 

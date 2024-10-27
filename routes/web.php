@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Cashier\CashierController;
 use App\Http\Controllers\Dean\DeanController;
 use App\Http\Controllers\Dean\ProgramController;
 use App\Http\Controllers\Dean\SemesterController;
@@ -104,6 +105,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Teacher Routes
     Route::group(['prefix' => 'teacher', 'middleware' => ['role:teacher'], 'as' => 'teacher.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+    });
+    
+    // Cashier Routes
+    Route::group(['prefix' => 'cashier', 'middleware' => ['role:cashier'], 'as' => 'cashier.'], function () {
+        Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/liabilities',[CashierController::class, 'liabilities'])->name('liabilities');
+        Route::post('/dashboard/liabilities/create',[CashierController::class, 'create'])->name('liabilities.create');
     });
     
 });

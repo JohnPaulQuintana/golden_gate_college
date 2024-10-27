@@ -7,6 +7,7 @@ use App\Models\Information;
 use App\Models\Teacher;
 use App\Models\TeacherInformation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -79,5 +80,10 @@ class User extends Authenticatable
     public function teacherInformation() :HasOne
     {
         return $this->hasOne(TeacherInformation::class, 'user_id');
+    }
+
+    public function liabilities() :HasMany
+    {
+        return $this->hasMany(Liabilities::class, 'user_id');
     }
 }
