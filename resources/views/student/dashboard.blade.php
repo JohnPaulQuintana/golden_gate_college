@@ -170,11 +170,14 @@
                 let currentIndex = 0; // Track the current index of displayed liabilities
                 const chunkSize = 1; // Number of items to display at a time
                 const displayInterval = 5000; // Time in milliseconds to wait before displaying the next liability
-
+                console.log(liabilities)
                 // Function to display the next chunk of liabilities
                 function displayNextChunk() {
                     const container = $('#liabilities-announcement');
 
+                    if(liabilities.length === 0){
+                        $('#bg-liabilities').addClass('hidden')
+                    }
                     // Clear the container if looping back to the start
                     if (currentIndex === 0) {
                         container.empty(); // Optionally clear the previous content
@@ -182,6 +185,7 @@
 
                     // Create the announcement for the current liability
                     const liability = liabilities[currentIndex];
+                    console.log(liabilities.length)
                     const announcement = `
                         <div class="announcement opacity-0 transition-opacity duration-500 ease-in-out text-center md:text-start">
                             <p class="text-xs font-medium text-[#bc9c22] uppercase tracking-wider">
