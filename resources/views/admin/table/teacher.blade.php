@@ -172,7 +172,7 @@
                                         <div class="px-6 py-3">
                                             <span
                                                 class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                <a href="#">Edit</a>
+                                                <a href="list/edit/{{$teacher->id}}">Edit</a>
                                             </span>
                                         </div>
                                     </td>
