@@ -78,4 +78,11 @@ class AdminController extends Controller
 
         return Redirect::route('admin.teacher')->with(['status'=>'success','message'=>'You added '.$validatedTeacher['firstname'].' '.$validatedTeacher['lastname'].' on our record!']);
     }
+
+    public function teacherList() {
+        $students = User::where('role', 'teacher')->paginate(10);
+        $role = Auth::user()->role;
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+        return view($role.'.student.list', compact('initial', 'students'));
+    }
 }

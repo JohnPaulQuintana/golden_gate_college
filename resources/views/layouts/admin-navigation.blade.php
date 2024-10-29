@@ -203,9 +203,9 @@
                     </a> 
                   </li>
                   <li class="hs-accordion" id="users-accordion-sub-2">
-                    <button type="button" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-green focus:outline-none focus:bg-green dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200" aria-expanded="true" aria-controls="users-accordion-sub-2-child">
+                    <a a href="{{ route(auth()->user()->role.'.teacher.list') }}" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-green focus:outline-none focus:bg-green dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200" aria-expanded="true" aria-controls="users-accordion-sub-2-child">
                       Teacher List
-                    </button>
+                    </a>
                   </li>
                 </ul>
               </div>

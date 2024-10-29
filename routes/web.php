@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         // add teacher
         Route::get('teacher',[AdminController::class, 'teacher'])->name('teacher');
+        Route::get('teacher/list', [AdminController::class, 'teacherList'])->name('teacher.list');
         Route::post('add/teacher',[AdminController::class, 'addTeacher'])->name('add.teacher');
         
         // add student

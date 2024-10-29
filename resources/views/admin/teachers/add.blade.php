@@ -137,9 +137,6 @@
                     </button>
                     <button type="submit" class="bg-sidebar p-2 text-white rounded-md hover:bg-green">Add Teacher</button>
                 </form>
-
-                {{-- table --}}
-                @include('admin.table.teacher',['teachers' => $teachers])
             </div>
 
         </div>
