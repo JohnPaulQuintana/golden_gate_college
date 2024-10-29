@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Associate with course
-            $table->text('type')->default('System Notification');
+            $table->string('type')->default('System Notification');
             $table->text('message');
             $table->boolean('status');
             $table->timestamps();
