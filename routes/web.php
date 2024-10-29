@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('student',[StudentController::class, 'student'])->name('student');
         Route::get('student/list', [StudentController::class, 'studentList'])->name('student.list');
         Route::post('add/student',[StudentController::class, 'addStudent'])->name('add.student');
+        Route::post('student/list/edit/{id}', [StudentController::class, 'updateStudentInfo'])->name('edit.student');
+        Route::get('student/list/edit/{id}', [StudentController::class, 'studentEdit'])->name('student.edit.page');
 
         // add department
         Route::get('department',[DepartmentController::class, 'department'])->name('department');
