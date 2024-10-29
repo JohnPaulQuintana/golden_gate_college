@@ -1,5 +1,12 @@
 <x-app-layout>
 
+    @php
+        $total_students = \App\Models\User::where('role', 'student')->count();
+        $total_teachers = \App\Models\User::where('role', 'teacher')->count();
+        $total_departments = \App\Models\Department::count();
+        $total_programs = \App\Models\Program::count();
+    @endphp
+
     <div class="w-full">
         <div class="mx-auto">
             {{-- header --}}
@@ -42,7 +49,7 @@
                 <div class="w-full md:w-fit border border-green-700 rounded-md p-4 flex gap-2 justify-between items-center">
                     <div class="flex-1">
                         <span class="block font-bold text-2xl uppercase text-green">Student</span>
-                        <span class="block font-bold text-xl">1350</span>
+                        <span class="block font-bold text-xl">{{ $total_students }}</span>
                         <span class="font-bold text-base">Total Students</span>
                     </div>
                     <div class="border bg-sidebar rounded-md p-2">
@@ -53,7 +60,7 @@
                 <div class="w-full md:w-fit border border-green-700 rounded-md p-4 flex gap-2 justify-between items-center">
                     <div class="flex-1">
                         <span class="block font-bold text-2xl uppercase text-green">Teacher</span>
-                        <span class="block font-bold text-xl">20</span>
+                        <span class="block font-bold text-xl">{{ $total_teachers }}</span>
                         <span class="font-bold text-base">Total Teachers</span>
                     </div>
                     <div class="border bg-sidebar rounded-md p-2">
@@ -64,7 +71,7 @@
                 <div class="w-full md:w-fit border border-green-700 rounded-md p-4 flex gap-2 justify-between items-center">
                     <div class="flex-1">
                         <span class="block font-bold text-2xl text-green">Department</span>
-                        <span class="block font-bold text-xl">5</span>
+                        <span class="block font-bold text-xl">{{ $total_departments }}</span>
                         <span class="font-bold text-base">Total Students</span>
                     </div>
                     <div class="border bg-sidebar rounded-md p-2">
@@ -75,7 +82,7 @@
                 <div class="w-full md:w-fit border border-green-700 rounded-md p-4 flex gap-2 justify-between items-center">
                     <div class="flex-1">
                         <span class="block font-bold text-2xl text-green">Program</span>
-                        <span class="block font-bold text-xl">28</span>
+                        <span class="block font-bold text-xl">{{ $total_programs }}</span>
                         <span class="font-bold text-base">Total Programs</span>
                     </div>
                     <div class="border bg-sidebar rounded-md p-2">
