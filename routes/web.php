@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         
         // add student
         Route::get('student',[StudentController::class, 'student'])->name('student');
+        Route::get('student/list', [StudentController::class, 'studentList'])->name('student.list');
         Route::post('add/student',[StudentController::class, 'addStudent'])->name('add.student');
 
         // add department

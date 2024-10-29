@@ -72,5 +72,10 @@ class StudentController extends Controller
         return Redirect::route('admin.student')->with(['status'=>'success','message'=>'You added '.$fullname.' on our record!']);
     }
 
-
+    public function studentList() {
+        $students = User::where('role', 'student')->paginate(10);
+        $role = Auth::user()->role;
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+        return view($role.'.student.list', compact('initial', 'students'));
+    }
 }
