@@ -4,18 +4,24 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Cashier\CashierController;
+use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\Dean\DeanController;
 use App\Http\Controllers\Dean\ProgramController;
 use App\Http\Controllers\Dean\SemesterController;
 use App\Http\Controllers\Dean\SubjectController;
 use App\Http\Controllers\Dean\YearLevelController;
 use App\Http\Controllers\Department\DepartmentController;
+use App\Http\Controllers\LiabilitiesController;
 use App\Http\Controllers\Notification\NotificationController;
 // use App\Http\Controllers\Registrar\ProgramController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Registrar\RegistrarController;
 use App\Http\Controllers\Registrar\RegistrarProgramController;
 use App\Http\Controllers\Roles\RoleController;
 use App\Http\Controllers\Student\EnrollmentController;
+use App\Http\Controllers\StudentRecord\StudentRecordController;
+use App\Http\Controllers\Teacher\TeacherController;
+use App\Models\Liabilities;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +45,14 @@ Route::get('/', [AuthenticatedSessionController::class, 'create'])
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/liabilities',[LiabilitiesController::class, 'liabilities'])->name('liabilities');
+    Route::post('/liabilities/create',[LiabilitiesController::class, 'create'])->name('liabilities.create');
+    Route::post('/liabilities/update',[LiabilitiesController::class, 'update'])->name('liabilities.update');
+    Route::get('/student/records', [StudentRecordController::class, 'studentRecord'])->name('student.records');
+
+    // schedule public
+    Route::get('/schedule',[ClassScheduleController::class,'schedule'])->name('schedule');
+    Route::post('/schedule/upload',[ClassScheduleController::class,'uploadSchedule'])->name('schedule.upload');
     // Admin Routes
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin'], 'as' => 'admin.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
@@ -62,6 +76,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
          // add teacher
          Route::get('teacher',[DeanController::class, 'teacher'])->name('teacher');
          Route::post('add/teacher',[DeanController::class, 'addTeacher'])->name('add.teacher');
+         Route::post('update/teacher',[DeanController::class, 'updateTeacher'])->name('update.teacher');
         //  manage program
         Route::get('academic',[DeanController::class, 'academic'])->name('academic');
         Route::post('semester',[DeanController::class, 'semester'])->name('semester');
@@ -82,6 +97,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::get('program',[ProgramController::class, 'program'])->name('program');
         Route::post('program/add',[ProgramController::class, 'addProgram'])->name('program.add');
+        Route::post('program/update',[ProgramController::class, 'updateProgram'])->name('program.update');
     });
 
     // Registrar Routes
@@ -91,6 +107,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         // open program with created year level and subjects inside
         Route::get('/program/enroll/{id}',[RegistrarProgramController::class, 'enroll'])->name('enroll');
+        Route::get('/proceed/{id}', [RegistrarProgramController::class, 'proceed'])->name('proceed');
+        Route::get('/untag/{liability_id}/user/{user_id}', [RegistrarProgramController::class, 'untag'])->name('untag');
+
+        Route::post('/notify/student',[RegistrarProgramController::class, 'notify'])->name('notify');
     });
 
     // Student Routes
@@ -105,19 +125,26 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Teacher Routes
     Route::group(['prefix' => 'teacher', 'middleware' => ['role:teacher'], 'as' => 'teacher.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
+        Route::get('/subjects',[TeacherController::class, 'subjects'])->name('subject');
+        Route::get('/my-subjects',[TeacherController::class, 'mySubjects'])->name('my.subject');
+        Route::get('/my-student/{id}',[TeacherController::class, 'myStudents'])->name('my.student');
+        Route::post('/save-selected-subjects',[TeacherController::class, 'addSubjects'])->name('save.subject');
+        Route::post('/delete-subjects',[TeacherController::class, 'deleteSubject'])->name('delete.subject');
+        Route::post('/enrolled-student',[TeacherController::class, 'enrolledStudent'])->name('enrolled.student');
     });
     
     // Cashier Routes
     Route::group(['prefix' => 'cashier', 'middleware' => ['role:cashier'], 'as' => 'cashier.'], function () {
         Route::get('/dashboard',[RoleController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard/liabilities',[CashierController::class, 'liabilities'])->name('liabilities');
-        Route::post('/dashboard/liabilities/create',[CashierController::class, 'create'])->name('liabilities.create');
+        Route::get('/enroll/{id}',[CashierController::class, 'enroll'])->name('enroll');
     });
     
+
 });
 
 
 Route::middleware('auth')->group(function () {
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

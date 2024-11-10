@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Enrollment;
 use App\Models\Information;
 use App\Models\User;
 use App\Services\InitialService;
@@ -64,6 +65,14 @@ class StudentController extends Controller
                     'guardian_middlename' => $request->guardian_middlename,
                     'guardian_contact_number' => $validatedRequest['guardian_contact_number'],
                 ]);
+
+                //create default enrollment fon records
+                // $existingEnrollmentStudent = Enrollment::where('user_id',$user->id)->where('status','in-process')->first();
+                // if(!$existingEnrollmentStudent){
+                //     Enrollment::create([
+                //         ''
+                //     ]);
+                // }
             }
         }else{
             return Redirect::route('admin.student')->with(['status'=>'error','message'=>'Email address is already been used!']);

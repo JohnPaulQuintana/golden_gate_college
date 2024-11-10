@@ -26,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile'
     ];
 
     /**
@@ -86,4 +87,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Liabilities::class, 'user_id');
     }
+
+  
 }

@@ -121,6 +121,21 @@ class DeanController extends Controller
         }
     }
 
+    //update teacher email
+    public function updateTeacher(Request $request)
+    {
+        // dd($request);
+        $user = User::find($request->user_id);
+        // dd($user);
+        if($user){
+            $user->update([
+                'email' => $request->email,
+                'email_verified_at' => null
+            ]);
+            return Redirect::route('dean.teacher')->with(['status'=>'success','message'=>'You update the email '.$request->email.' on our record!']);
+        }
+    }
+
     //add semester
     public function semester(Request $request)
     {

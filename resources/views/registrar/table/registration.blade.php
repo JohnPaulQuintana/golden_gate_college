@@ -91,14 +91,6 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Liabilities
-                                        </span>
-                                    </div>
-                                </th>
-                                <th scope="col" class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
-                                    <div class="flex items-center gap-x-2">
-                                        <span
-                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
                                             Student No
                                         </span>
                                     </div>
@@ -146,7 +138,6 @@
                                             <span
                                                 class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
                                                 more
-                                                
                                             </span>
                                         </div>
                                     </th>
@@ -171,12 +162,6 @@
                                     
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
-                                        <div class="px-6 py-3 text-sm text-red-500">
-                                            <span>3 - found</span>
-                                        </div>
-                                    </td>
-                                    <td class="h-px w-72 whitespace-nowrap">
-                                        
                                         <div class="px-6 py-3">
                                             {{ $student->student_no }}
                                         </div>
@@ -195,20 +180,20 @@
                                     </td>
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
-                                        <div class="px-6 py-3">
-                                            {{ $student->semester_id }}
+                                        <div class="px-6 py-3 uppercase">
+                                            {{ $student->semester }} Semester
                                         </div>
                                     </td>
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
                                         <div class="px-6 py-3">
-                                            {{ $student->academic_year_id }}
+                                            {{ $student->academic_year }}
                                         </div>
                                     </td>
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
                                         <div class="px-6 py-3">
-                                            <a href="#" class="text-sm bg-red-500 hover:bg-red-700 text-white rounded-sm px-1">open</a>
+                                            <a data-info="{{ htmlspecialchars(json_encode($student), ENT_QUOTES, 'UTF-8') }}" data-id="{{ $student->id }}" class="enrollment-action text-sm bg-red-500 hover:bg-red-700 text-white rounded-sm px-1 hover:cursor-pointer">action</a>
                                             {{-- <a href="#" class="text-sm bg-red-500 hover:bg-red-700 text-white rounded-sm px-1">liabilities</a> --}}
                                         </div>
                                     </td>

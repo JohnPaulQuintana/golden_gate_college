@@ -7,12 +7,15 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Models\EnrolledSubject;
 use App\Models\Enrollment;
 use App\Models\Information;
+use App\Models\Liabilities;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\subjects;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\YearLevelWithSubjects;
 use App\Services\InitialService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +31,13 @@ class EnrollmentController extends Controller
     //enrollemnt form
     public function enrollment()
     {
-        $existingEnrollmentForm = Enrollment::where('user_id', Auth::user()->id)->where('status', 'in-process')->first();
+        $enrollmentStatus = Enrollment::where('user_id',Auth::user()->id)->first();
+        $existingEnrollmentForm = Enrollment::join('semesters', 'enrollments.semester_id', '=','semesters.id')
+        ->join('academic_years', 'enrollments.academic_year_id','=','academic_years.id')
+        ->join('programs', 'enrollments.program_id','=','programs.id')
+        ->join('year_level_with_subjects','enrollments.year_level_with_subject_id','=','year_level_with_subjects.id')
+        ->select('enrollments.*', 'semesters.name as semester', 'academic_years.academic_year', 'programs.program','programs.abbrev','year_level_with_subjects.year_level')
+        ->where('enrollments.user_id',Auth::user()->id)->first();
 
         $information = User::with('information')->where('id', Auth::user()->id)->first();
         $initial = $this->initialService->getInitials(Auth::user()->name);
@@ -141,7 +150,20 @@ class EnrollmentController extends Controller
             
 
         // dd($courses);
-        return view('student.enrollment.enrollment', compact('information', 'initial', 'student_information', 'courses', 'existingEnrollmentForm'));
+
+        $today = Carbon::today()->toDateString(); // Get today's date
+        $liabilities = Liabilities::with('user')->whereDate('created_at', $today)->get();
+
+        $tags = Tag::join('liabilities', 'tags.liability_id', '=', 'liabilities.id')
+        ->join('users','liabilities.user_id', '=','users.id')
+        ->join('academic_years','liabilities.academic_year_id', '=','academic_years.id')
+        ->join('semesters', 'liabilities.semester_id', '=','semesters.id')
+        ->select('tags.*','liabilities.liabilities_description','users.role','users.name','academic_years.academic_year', 'semesters.name as semester')
+        ->where('tags.user_id', Auth::user()->id)->where('tags.status', 'unpaid')
+        ->orderBy('liabilities.created_at', 'desc') // Order by the created_at column in descending order
+        ->get();
+        
+        return view('student.enrollment.enrollment', compact('information', 'initial', 'student_information', 'courses', 'existingEnrollmentForm','enrollmentStatus', 'liabilities','tags'));
     }
 
     protected function getYearLevelName($yearLevel)
@@ -166,8 +188,49 @@ class EnrollmentController extends Controller
         // Continue with your logic (e.g., saving the data)
         // Create a new student record
         // dd($validatedData);
-        $existingEnrollmentForm = Enrollment::where('student_no', $validatedData['std_no'])->where('status', 'in-process')->first();
+        $existingEnrollmentForm = Enrollment::where('student_no', $validatedData['std_no'])->where('status', '!=','enrolled')->first();
         if($existingEnrollmentForm){
+            $existingEnrollmentForm->update([
+                'student_no' => $validatedData['std_no'],
+                'program_id' => $validatedData['course'],
+                'semester_id' => $validatedData['semester'],
+                'user_id' => Auth::user()->id,
+                'academic_year_id' => $validatedData['academic_id'],
+                'year_level_with_subject_id' => $validatedData['year_level'],
+                'fullname' => $validatedData['name'],
+                'gender' => $validatedData['gender'],
+                'contact_number' => $validatedData['contact_number'],
+                'civil_status' => $validatedData['civil_status'],
+                'nationality' => $validatedData['nationality'],
+                'date_of_birth' => $validatedData['date_of_birth'],
+                'place_of_birth' => $validatedData['place_of_birth'],
+                'age' => $validatedData['age'],
+                'guardian_fullname' => $validatedData['guardian'],
+                'address' => $validatedData['address'],
+                'elementary' => $validatedData['elementary'],
+                'elementary_year' => $validatedData['elementary_graduated'],
+                'secondary' => $validatedData['secondary'],
+                'secondary_year' => $validatedData['secondary_graduated'],
+                'senior_high' => $validatedData['senior_high_school'],
+                'senior_high_year' => $validatedData['senior_high_school_graduated'],
+                'status' => 'in-process', // Assuming you're setting the status to "enrolled" upon creation
+            ]);
+            if($existingEnrollmentForm){
+                EnrolledSubject::where('enrollment_id', $existingEnrollmentForm->id)->delete();
+                foreach ($validatedData['selected_subjects'] as $s) {
+                    EnrolledSubject::create([
+                        'enrollment_id' => $existingEnrollmentForm->id,
+                        'subject_id' => $s
+                    ]);
+                }
+               
+                // add notification message
+                Notification::create([
+                    'user_id' => Auth::user()->id,
+                    'message' => "Your enrollment application has been successfully submitted. We will notify you here as soon as possible with any updates.",
+                    'status' => false,
+                ]);
+            }
             return redirect()->back()->with(['status' => 'in-process', 'message' => 'Your enrollment form is in process right now...']);
         }
         $studentInformation = Enrollment::create([
@@ -207,7 +270,7 @@ class EnrollmentController extends Controller
             // add notification message
             Notification::create([
                 'user_id' => Auth::user()->id,
-                'message' => "We successfully submitted your enrollment application, we will notify you as soon as possible in here...",
+                'message' => "Your enrollment application has been successfully submitted. We will notify you here as soon as possible with any updates.",
                 'status' => false,
             ]);
         }

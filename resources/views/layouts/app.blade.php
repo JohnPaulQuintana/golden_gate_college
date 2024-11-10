@@ -56,6 +56,8 @@
                 @include('layouts.admin-navigation')
             @elseif (Auth::user()->role === 'dean')
                 @include('layouts.dean-navigation')
+            @elseif (Auth::user()->role === 'teacher')
+                @include('layouts.teacher-navigation')
             @elseif (Auth::user()->role === 'student')
                 @include('layouts.student-navigation')
             @elseif (Auth::user()->role === 'registrar')

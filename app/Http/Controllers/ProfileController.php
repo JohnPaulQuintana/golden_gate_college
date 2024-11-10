@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -26,13 +28,36 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        // dd($request);
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if (!$user) {
+            return back()->withErrors(['error' => 'User not found.']);
         }
 
-        $request->user()->save();
+        $user->fill($request->validated());
+
+        // Check if a file is uploaded
+        if ($request->hasFile('profile')) {
+            // Define the directory inside 'public'
+            $directory = 'profiles';
+
+            // Generate a unique file name with the original extension
+            $file = $request->file('profile');
+            $uniqueFileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
+            // Store the file in the 'public' disk (storage/app/public)
+            $filePath = $file->storeAs($directory, $uniqueFileName, 'public');
+
+            // Update the user's profile with the relative file path
+            $user->profile = 'storage/' . $filePath; // Save the relative file path
+        }
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

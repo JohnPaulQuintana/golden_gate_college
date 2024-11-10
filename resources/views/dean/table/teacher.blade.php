@@ -185,7 +185,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Teacher Name
+                                            Fullname
                                         </span>
                                     </div>
                                 </th>
@@ -194,7 +194,23 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Teacher Email
+                                            Email
+                                        </span>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-start">
+                                    <div class="flex items-center gap-x-2">
+                                        <span
+                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                            is_verified?
+                                        </span>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-start">
+                                    <div class="flex items-center gap-x-2">
+                                        <span
+                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                            created_at
                                         </span>
                                     </div>
                                 </th>
@@ -213,7 +229,7 @@
                                         <div class="flex items-center gap-x-2">
                                             <span
                                                 class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                more
+                                                action
                                                 
                                             </span>
                                         </div>
@@ -252,13 +268,31 @@
                                             </span>
                                         </div>
                                     </td>
+                                    <td class="h-px w-72 whitespace-nowrap">
+                                        <div class="px-6 py-3">
+                                            <span
+                                                class="block text-xs font-semibold uppercase w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
+                                                {{ $teacher->users->email_verified_at === null ? 'no' : 'yes' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="h-px w-72 whitespace-nowrap">
+                                        <div class="px-6 py-3">
+                                            <span
+                                                class="block text-xs font-semibold uppercase w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
+                                                {{ $teacher->users->created_at }}
+                                            </span>
+                                        </div>
+                                    </td>
 
                                     
                                     <td class="h-px w-72 whitespace-nowrap">
                                         <div class="px-6 py-3">
                                             <span
-                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                <a href="#">Edit</a>
+                                                data-user_id="{{ $teacher->users->id }}"
+                                                data-user_email="{{ $teacher->users->email }}"
+                                                class="change_email_btn block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 hover:cursor-pointer dark:text-neutral-200">
+                                                <a>change email</a>
                                             </span>
                                         </div>
                                     </td>

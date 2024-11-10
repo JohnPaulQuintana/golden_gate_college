@@ -17,7 +17,7 @@
                     </button>
                   
                     <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-sidebar shadow-md rounded-lg p-1 space-y-0.5 mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700" role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-custom-trigger">
-                      <a class="flex items-center gap-x-1.5 py-2 px-3 rounded-lg text-sm text-white hover:bg-hover focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                      <a class="flex items-center gap-x-1.5 py-2 px-3 rounded-lg text-sm text-white hover:bg-hover focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="{{ asset(Auth::user()->profile) }}">
                         <svg class="text-[#bc9c22]" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" stroke="currentColor" viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-384c0-35.3-28.7-64-64-64L64 0zm96 320l64 0c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16L96 416c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM144 64l96 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-96 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
                         Manage Profile
                       </a>
@@ -44,14 +44,16 @@
             </div>
         </div>
     </div>
-
+    @include('modal.student')
+    @include('modal.notify-student')
     @section('scripts')
         <script>
             $(document).ready(function(){
                 console.log('adding student connected...')
                 $status = @json(session('status'));
                 $message = @json(session('message'));
-
+                $infos = @json($students);
+                console.log($infos)
                 //popup message
                 const sessionMessage = (s,m) => {
                     Swal.fire({
@@ -64,6 +66,108 @@
                 if($status !== null){
                     sessionMessage($status, $message)
                 }
+
+                const level = (n) => {
+                    switch (n) {
+                        case 1:
+                            return 'First Year College'
+                        case 2:
+                            return 'Second Year College'
+                        case 3:
+                            return 'Third Year College'
+                        case 4:
+                            return 'Forth Year College'
+                    
+                        default:
+                            return 'N/A'
+                    }
+                }
+
+                const formattedDate = (date) => {
+                    // Convert the created_at date string to a readable format
+                    let createdAt = new Date(date);
+
+                    // Format the date as needed, e.g., "November 10, 2024, 3:30 PM"
+                    let readableDate = createdAt.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    });
+
+                    return readableDate;
+                }
+                // more button
+                // $('#student_modal_btn').click()
+                $('.enrollment-action').click(function(){
+                    let student_id = $(this).data('id')
+                    let html = ''
+                    let html2 = ''
+                    var baseUrl = window.location.origin;
+                    $infos.data.forEach(info => {
+                        console.log(info)
+                        if(parseInt(student_id) === parseInt(info.id)){
+                            console.log('yes')
+                            html += `
+                                <div class="bg-slate-50 p-2 w-full uppercase text-green rounded-sm shadow flex flex-col gap-2">
+                                    <span>Academic Year :  <span>${info.academic_year} - ${info.semester} Semester</span></span>
+                                </div>
+                                
+                                <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                    <span>Fullname :  <span>${info.fullname}</span></span>
+                                </div>
+                                <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                    <span>BirthDate :  <span>${info.date_of_birth}</span></span>
+                                </div>
+                                <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                    <span>Contact :  <span>${info.contact_number}</span></span>
+                                </div>
+                                <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                    <span>Address :  <span>${info.address}</span></span>
+                                </div>
+                                <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                    <span>Guardian :  <span>${info.guardian_fullname}</span></span>
+                                </div>
+                            `
+                            let totalCredits = 0
+                            info.enrolled_subjects.forEach(subject => {
+                                totalCredits += parseInt(subject.credits)
+                                html2 += `
+                                    <div class="bg-slate-50 p-2 w-full rounded-sm shadow flex flex-col gap-2">
+                                        <span class="uppercase text-green">Subject :  <span>${subject.subject_name}</span></span>
+                                        <span>Code :  <span>${subject.subject_code}</span></span>
+                                        <span class="text-red-500">Credits :  <span>${subject.credits}</span></span>
+                                    </div>
+                                `
+                            });
+                            
+                            $('#modal-profile').attr('src',`${baseUrl}/${info.profile}`)
+                            $('.modal-name').text(`${info.program}`)
+                            $('.modal-yl').text(`${level(parseInt(info.year_level_with_subject_id))}`)
+                            $('.modal-st').text(`${info.student_no}`)
+                            $('.modal-created_at').text(`${formattedDate(info.created_at)}`)
+
+                            $('.proceed').attr('href',`${baseUrl}/registrar/proceed/${info.id}`)
+                            $('.student-card').html(html)
+                            $('.notify-student').attr('data-student_id',student_id)
+                            $('#totalCredits').text(` Credits : ${totalCredits}`)
+                            $('.subject-card').html(html2)
+                            $('#student_modal_btn').click()
+                        }
+                    });
+                    
+                    
+                })
+
+                //notify student
+                $('.notify-student').click(function(){
+                    let st_id = $(this).data('student_id')
+                    $('#cts-student-id').val(parseInt(st_id))
+                    $('#notify_modal_btn').click()
+
+                })
             })
         </script>
     @endsection

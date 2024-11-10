@@ -195,12 +195,20 @@
                                         </span>
                                     </div>
                                 </th>
+                                {{-- <th scope="col" class="px-6 py-3 text-start">
+                                    <div class="flex items-center gap-x-2">
+                                        <span
+                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                            Student's
+                                        </span>
+                                    </div>
+                                </th> --}}
 
                                 <th scope="col" class="px-6 py-3 text-start">
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Status
+                                            Created_At
                                         </span>
                                     </div>
                                 </th>
@@ -260,24 +268,25 @@
                                             {{ $prog->abbrev }}
                                         </p>
                                     </td>
+                                    {{-- <td class="h-px w-72">
+                                        <p class="px-6 line-clamp-3 overflow-hidden">
+                                            {{ count($programs) }}
+                                        </p>
+                                    </td>
+                                     --}}
                                     
-                                    
-                                    
-
-                                    
-
                                     <td class="h-px w-72 whitespace-nowrap">
                                         
                                         <div class="px-6 py-3">
-                                            {{ $prog->is_open }}
+                                            {{ $prog->created_at }}
                                         </div>
                                     </td>
 
                                     <td class="h-px w-72 whitespace-nowrap">
                                         <div class="px-6 py-3">
                                             <span
-                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                <a href="#">Edit</a>
+                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200 hover:cursor-pointer">
+                                                <a data-program_id="{{ $prog->id }}" class="table_edit_btn">Edit</a>
                                             </span>
                                         </div>
                                     </td>

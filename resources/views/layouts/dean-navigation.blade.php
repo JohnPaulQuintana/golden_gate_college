@@ -153,9 +153,23 @@
         <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
           <ul class="flex flex-col space-y-1">
             <li>
-              <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-700 dark:text-white" href="#">
+              <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-700 dark:text-white" href="{{ route('dean.dashboard') }}">
                 <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 Dashboard
+              </a>
+            </li>
+            {{-- liabilities --}}
+            <li class="hs-accordion" id="users-accordion">
+              <a href="{{ route('liabilities') }}" class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-700 dark:text-white" href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Liabilities <span class="text-xs ms-auto bg-red-500 px-1 rounded-md">1</span>
+              </a>
+            </li>
+            {{-- Student Records --}}
+            <li class="hs-accordion" id="users-accordion">
+              <a href="{{ route('student.records') }}" class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-700 dark:text-white" href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Student Record's <span class="text-xs ms-auto bg-red-500 px-1 rounded-md">1</span>
               </a>
             </li>
             {{-- Teacher --}}
@@ -176,11 +190,11 @@
                       Add Teacher
                     </a> 
                   </li>
-                  <li class="hs-accordion" id="users-accordion-sub-2">
+                  {{-- <li class="hs-accordion" id="users-accordion-sub-2">
                     <button type="button" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-green focus:outline-none focus:bg-green dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200" aria-expanded="true" aria-controls="users-accordion-sub-2-child">
                       Teacher List
                     </button>
-                  </li>
+                  </li> --}}
                 </ul>
               </div>
             </li>
@@ -235,6 +249,14 @@
                   </li> --}}
                 </ul>
               </div>
+            </li>
+
+            {{-- Class Scheduled --}}
+            <li class="hs-accordion" id="users-accordion">
+              <a href="{{ route('schedule') }}" class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-700 dark:text-white" href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Class Scheduled
+              </a>
             </li>
           </ul>
         </nav>

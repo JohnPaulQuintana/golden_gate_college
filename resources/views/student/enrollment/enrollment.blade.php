@@ -28,7 +28,7 @@
                     <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-sidebar shadow-md rounded-lg p-1 space-y-0.5 mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700"
                         role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-custom-trigger">
                         <a class="flex items-center gap-x-1.5 py-2 px-3 rounded-lg text-sm text-white hover:bg-hover focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                            href="#">
+                            href="{{ asset(Auth::user()->profile) }}">
                             <svg class="text-[#bc9c22]" xmlns="http://www.w3.org/2000/svg" width="24" height="20"
                                 fill="currentColor" stroke="currentColor"
                                 viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -64,17 +64,50 @@
                 <div class="flex flex-wrap justify-between gap-2 items-center">
                     <div class="flex-1 p-2 flex items-center gap-2">
                         <div class="profile">
-                            <img class="w-[100px] h-[100px] rounded-full" src="{{ asset('img/profile-default.jpg') }}"
+                            <img class="w-[100px] h-[100px] rounded-full" src="{{ asset(Auth::user()->profile) }}"
                                 alt="" srcset="">
                         </div>
                         <div class="details flex flex-col uppercase">
+                            {{-- {{ $existingEnrollmentForm }} --}}
                             <span class="font-bold">{{ $information->information->firstname }},
                                 {{ $information->information->lastname }},
                                 {{ $information->information->middlename }}</span>
-                            <span class="text-sm">3rd Year, BSIT</span>
-                            <span class="text-sm">Business Analytics</span>
-                            <span class="text-sm">Second Semester AY 2023-2024</span>
-                            <span class="text-sm text-[#bc9c22]">Enrolled</span>
+                                <span class="text-sm">
+                                    @php
+                                        // Check if $existingEnrollmentForm is not null
+                                        $year = $existingEnrollmentForm ? $existingEnrollmentForm->year_level : null;
+                                        $yearText = '';
+                                
+                                        // Only proceed if the year is available
+                                        if ($year !== null) {
+                                            switch($year) {
+                                                case 1:
+                                                    $yearText = '1st Year';
+                                                    break;
+                                                case 2:
+                                                    $yearText = '2nd Year';
+                                                    break;
+                                                case 3:
+                                                    $yearText = '3rd Year';
+                                                    break;
+                                                case 4:
+                                                    $yearText = '4th Year';
+                                                    break;
+                                                default:
+                                                    $yearText = $year . 'th Year'; // Handle any other case
+                                                    break;
+                                            }
+                                        }
+                                    @endphp
+                                {{ $yearText ?? 'N/A' }}, {{ $existingEnrollmentForm->abbrev ?? 'Code' }}</span>
+                            <span class="text-sm">{{ $existingEnrollmentForm->program ?? 'Program' }}</span>
+                            <span class="text-sm">{{ $existingEnrollmentForm->semester ?? 'Semester' }} Semester AY {{ $existingEnrollmentForm->academic_year ?? 'N/A' }}</span>
+                            @if ($existingEnrollmentForm)
+                                <span class="text-sm text-[#bc9c22]">{{ $existingEnrollmentForm && $existingEnrollmentForm->status !== 'enrolled' ? 'not-enrolled' : 'enrolled' }}</span>
+                            @else
+                                <span class="text-sm text-[#bc9c22]">{{ $existingEnrollmentForm && $existingEnrollmentForm->status !== 'enrolled' ? 'not-enrolled' : 'N/A' }}</span>
+                                
+                            @endif
                         </div>
                     </div>
                     <div class="">
@@ -92,9 +125,9 @@
 
             {{-- dahboard content --}}
             <div class="bg-white overflow-hidden shadow-sm rounded p-2">
-                <span class="flex items-center justify-between gap-2 font-bold ps-2 text-xl text-green">Online Enrollment Form for class
-                    {{ date('Y') }} - 
-                    <span id="status" class="text-white rounded-sm px-2"></span>
+                <span class="flex items-center justify-between gap-2 font-bold ps-2 text-xl text-green py-2">Online Enrollment Form for class
+                    {{ $existingEnrollmentForm->academic_year ?? 'Not Available' }}
+                    <span id="status" class="text-white rounded-sm px-2 text-sm"></span>
                 </span>
                 <div class="bg-slate-200 p-2">
                     <form action="{{ route('student.dashboard.enrollment.insert') }}" method="post">
@@ -783,10 +816,26 @@
                 $form_status = @json(session('status'));
                 $form_message = @json(session('message'));
                 $enrollment_info = @json($existingEnrollmentForm);
+                console.log($enrollment_info.status)
+                if($enrollment_info.status === 'resubmit'){
+                    $('#submit').removeClass('hidden')
+                    $('input[name="std_no"]').val($enrollment_info.student_no)
+                    $('select[name="semester"]').val(String($enrollment_info.semester_id)).trigger('change').focus().blur();
+                    $('select[name="year_level"]').val(String($enrollment_info.year_level_with_subject_id)).trigger('change').focus().blur();
+                    $('input[name="contact_number"]').val($enrollment_info.contact_number)
+                    $('input[name="place_of_birth"]').val($enrollment_info.place_of_birth)
+                    $('input[name="elementary"]').val($enrollment_info.elementary)
+                    $('input[name="elementary_graduated"]').val($enrollment_info.elementary_year)
+                    $('input[name="secondary"]').val($enrollment_info.secondary)
+                    $('input[name="secondary_graduated"]').val($enrollment_info.secondary_year)
+                    $('input[name="senior_high_school"]').val($enrollment_info.senior_high)
+                    $('input[name="senior_high_school_graduated"]').val($enrollment_info.senior_high_year)
+                    $('#status').text($enrollment_info.status).addClass('bg-red-500')
+                }
                 if ($enrollment_info == null || $enrollment_info === "" || $.isEmptyObject($enrollment_info)) {
                     console.log("Enrollment info is either null, empty, or an empty object.");
-                    $('$submit').removeClass('hidden')
-                } else {
+                    $('#submit').removeClass('hidden')
+                } else if ($enrollment_info.status === 'in-process' || $enrollment_info.status === 'processed' || $enrollment_info.status === 'enrolled') {
                     console.log($enrollment_info)
                     $('input[name="std_no"]').val($enrollment_info.student_no)
                     $('select[name="semester"]').val(String($enrollment_info.semester_id)).trigger('change').focus().blur();
@@ -840,6 +889,55 @@
                     }
                     
                 }
+
+                const liabilities = @json($liabilities); // Pass liabilities data from Blade to JS
+                const tags = @json($tags); // Pass liabilities data from Blade to JS
+
+                console.log('connected to notification...')
+                //control enrolllent btn
+                const enrollmentBtn = () => {
+                    const button = $('#student_er_btn');
+                    button.off('click'); // Remove any existing click handlers
+
+                    if (tags.length > 0) {
+                        button
+                            .addClass('disabled') // Add a class to style it as disabled
+                            .attr('href', '#')    // Prevent navigation
+                            .css('pointer-events', 'none'); // Disable pointer events
+                        button.find('span').text('closed'); // Change text to 'closed'
+                    }
+                }
+
+                //control liabilities button
+                const liabilitiesBtn = () => {
+                    const button = $('#lia_btn');
+
+                    if (tags.length > 0) {
+                        button.find('span').text(`${tags.length} found`); // Change text to 'closed'
+                    }else{
+                        button.find('span').text(``);
+                    }
+                }
+                
+                $('#lia_btn').click(function(){
+                    // alert('yes')
+                    let html = ''
+                    tags.forEach(tag => {
+                        console.log(tag)
+                        html += `
+                            <div class="bg-slate-50 p-2 rounded-sm shadow flex flex-col gap-2">
+                                <p class="text-green">${tag.liabilities_description}</p>
+                                <span class="text-xs uppercase">${tag.semester} / ${tag.academic_year} / <span class="text-red-500">${tag.status}</span></span> 
+                                <span class="text-xs">posted by: ${tag.name} - ${tag.created_at}</span> 
+                            </div>
+                        `
+                    });
+                    $('#render-list').html(html)
+                    $('#liabilities_found_btn').trigger('click')
+                })
+
+                enrollmentBtn()
+                liabilitiesBtn()
 
                 popup($form_status, $form_message)
             })
