@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Information;
 use App\Models\User;
 use App\Services\InitialService;
 use App\Services\TeacherService;
@@ -77,5 +78,68 @@ class AdminController extends Controller
         ]);
 
         return Redirect::route('admin.teacher')->with(['status'=>'success','message'=>'You added '.$validatedTeacher['firstname'].' '.$validatedTeacher['lastname'].' on our record!']);
+    }
+
+    public function teacherList() {
+        $teachers = User::where('role', 'teacher')->paginate(10);
+        $role = Auth::user()->role;
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+        return view($role.'.teachers.list', compact('initial', 'teachers'));
+    }
+
+    public function teacherEdit($id) {
+        $teacher = User::find($id);
+        $role = Auth::user()->role;
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+
+        if (!$teacher) return Redirect::back();
+
+        return view($role.'.teachers.edit', compact('initial', 'teacher'));
+    }
+
+    public function updateTeacherInfo(Request $request, $id) {
+        $validatedRequest = $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required',
+            'birthdate' => 'required',
+            'address' => 'required',
+            'middlename' => 'required'
+        ]);
+
+        $user = User::find($id);
+        $information = Information::where('user_id', $id);
+        $emailExists = User::where('email', $validatedRequest['email'])->first();
+
+        if ($emailExists && $emailExists->id != $user->id) {
+            return Redirect::route('admin.teacher.edit.page', ['id' => $user->id])->withErrors(['email' => 'Email address is already in use!']);;
+        }
+
+        if($user){
+            $user->update([
+                'name' => $validatedRequest['firstname'].' '.$validatedRequest['lastname'],
+                'email' => $validatedRequest['email'],
+                'password' => Hash::make($validatedRequest['birthdate']),
+            ]);
+
+            $information->update([
+                'user_id' => $user->id,
+                'firstname' => $validatedRequest['firstname'],
+                'lastname' => $validatedRequest['lastname'],
+                'middlename' => $request->middlename,
+                'email' => $validatedRequest['email'],
+                'birthdate' => $validatedRequest['birthdate'],
+                'address' => $validatedRequest['address'],
+                'guardian_firstname' => $validatedRequest['guardian_firstname'],
+                'guardian_lastname' => $validatedRequest['guardian_lastname'],
+                'guardian_middlename' => $request->guardian_middlename,
+                'guardian_contact_number' => $validatedRequest['guardian_contact_number'],
+            ]);
+
+        } else {
+            return Redirect::back();
+        }
+
+        return Redirect::route('admin.teacher.list')->with(['status'=>'success','message'=>'You updated '.$user->name.' on our record!']);
     }
 }

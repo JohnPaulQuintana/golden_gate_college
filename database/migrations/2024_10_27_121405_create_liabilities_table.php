@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Associate with course
             $table->text('liabilities_description');
-            $table->text('status')->default('active');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }

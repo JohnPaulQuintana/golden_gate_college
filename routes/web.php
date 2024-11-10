@@ -59,11 +59,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         // add teacher
         Route::get('teacher',[AdminController::class, 'teacher'])->name('teacher');
+        Route::get('teacher/list', [AdminController::class, 'teacherList'])->name('teacher.list');
         Route::post('add/teacher',[AdminController::class, 'addTeacher'])->name('add.teacher');
-        
+        Route::post('teacher/list/edit/{id}', [AdminController::class, 'updateTeacherInfo'])->name('edit.teacher');
+        Route::get('teacher/list/edit/{id}', [AdminController::class, 'teacherEdit'])->name('teacher.edit.page');
+
         // add student
         Route::get('student',[StudentController::class, 'student'])->name('student');
+        Route::get('student/list', [StudentController::class, 'studentList'])->name('student.list');
         Route::post('add/student',[StudentController::class, 'addStudent'])->name('add.student');
+        Route::post('student/list/edit/{id}', [StudentController::class, 'updateStudentInfo'])->name('edit.student');
+        Route::get('student/list/edit/{id}', [StudentController::class, 'studentEdit'])->name('student.edit.page');
 
         // add department
         Route::get('department',[DepartmentController::class, 'department'])->name('department');
