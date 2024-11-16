@@ -22,7 +22,7 @@
 
         {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4/animate.min.css"> --}}
         <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css" rel="stylesheet">
-
+        
         <style>
             /* Hide the default scrollbar */
             ::-webkit-scrollbar {
@@ -49,6 +49,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        @yield('links')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -87,6 +89,9 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+        
+        {{-- <script src="https://preline.co/assets/js/hs-apexcharts-helpers.js"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @yield('scripts')
     </body>

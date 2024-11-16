@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Cashier\CashierController;
 use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\Dean\DeanController;
+use App\Http\Controllers\Dean\EvaluationController;
 use App\Http\Controllers\Dean\ProgramController;
 use App\Http\Controllers\Dean\SemesterController;
 use App\Http\Controllers\Dean\SubjectController;
@@ -104,6 +105,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('program',[ProgramController::class, 'program'])->name('program');
         Route::post('program/add',[ProgramController::class, 'addProgram'])->name('program.add');
         Route::post('program/update',[ProgramController::class, 'updateProgram'])->name('program.update');
+
+        //evaluatiom
+
+        Route::get('evaluation',[EvaluationController::class, 'create'])->name('evaluation');
+        Route::post('evaluation/store',[EvaluationController::class, 'store'])->name('evaluation.store');
+        Route::post('evaluation/update',[EvaluationController::class, 'updateEvaluation'])->name('evaluation.update');
+        Route::get('evaluation/delete/{id}',[EvaluationController::class, 'deleteEvaluation'])->name('evaluation.delete');
+        Route::get('evaluation/results',[EvaluationController::class, 'evaluationResults'])->name('evaluation.result');
     });
 
     // Registrar Routes
@@ -126,6 +135,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/dashboard/form/insert',[EnrollmentController::class, 'insert'])->name('dashboard.enrollment.insert');
         
         Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
+
+        Route::get('/evaluationForm', [EvaluationController::class, 'form'])->name('form');
+        Route::post('/evaluationForm/save', [EvaluationController::class, 'submitRatings'])->name('form.save');
     });
 
     // Teacher Routes
