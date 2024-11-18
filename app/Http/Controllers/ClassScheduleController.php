@@ -65,6 +65,7 @@ class ClassScheduleController extends Controller
                 'semester' => $request->semester,
                 'descriptions' => $request->description,
                 'class_schedule' => 'storage/' .$filePath,
+                'section' => $request->college_section
             ]);
 
             //notify all the student
@@ -73,7 +74,7 @@ class ClassScheduleController extends Controller
                 // add notification message
                 Notification::create([
                     'user_id' => $user->id,
-                    'type' => "Class Schedule is now posted",
+                    'type' => "Class Schedule for ".$request->semester." semester - ".$request->college_section." is now posted",
                     'message' => "The class schedule is now posted. Please check here for any updates regarding your enrolled classes. Thank you for your patience and welcome to the new term!",
                     'status' => false,
                 ]);

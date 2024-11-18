@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Models\EnrolledStudentOnSubject;
 use App\Models\Enrollment;
+use App\Models\StudentGrade;
 use App\Models\subjects;
 use App\Models\Teacher;
 use App\Models\TeacherSubject;
@@ -15,6 +16,8 @@ use App\Services\InitialService;
 use App\Services\TeacherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Redis;
 
 class TeacherController extends Controller
 {
@@ -152,9 +155,20 @@ class TeacherController extends Controller
             ->where('enrolled_student_on_subjects.teacher_id',Auth::user()->id)
             ->paginate(10);
         // dd($students);
+        foreach ($students as $key => $value) {
+            $student_grade = StudentGrade::where('semester',$value->semester." semester")
+            ->where('student_id',$value->student_id)
+            ->where('teacher_id',Auth::user()->id)
+            ->first();
+            $value->semester_grade = $student_grade;
+            // dd($student_grade);
+        }
+        // dd($students);
         return view('teacher.pages.my-student', compact('initial','subject','students'));
         // dd($id);
+        
     }
+
 
     //save selected subjects
     public function addSubjects(Request $request)
@@ -194,6 +208,46 @@ class TeacherController extends Controller
         ]);
     }
 
+    //student grade
+    public function studentGrade(Request $request)
+    {
+        // dd($request);
+        $existingRecord = StudentGrade::where('student_id',$request->student_id)
+        ->where('subject_id',$request->subject_id)
+        ->where('teacher_id',$request->teacher_id)
+        ->where('semester',$request->semester)
+        ->first();
+
+        if(!$existingRecord)
+        {
+            StudentGrade::create([
+                'student_id' => $request->student_id,
+                'subject_id' => $request->subject_id,
+                'teacher_id' => Auth::user()->id,
+                'semester' => $request->semester,
+                'student_grade' => $request->student_grade
+            ]);
+
+            return Redirect::route('teacher.my.student', $request->subject_id)->with(['status'=>"grade",'message'=>'successfully submitted grade!.']);
+        }
+    }
+
+    //edit grade
+    public function studentGradeEdit(Request $request)
+    {
+        // dd($request);
+        $record = StudentGrade::find($request->grade_id);
+        if($record){
+            $record->update([
+                'student_id' => $request->student_id,
+                'subject_id' => $request->subject_id,
+                'teacher_id' => Auth::user()->id,
+                'semester' => $request->semester,
+                'student_grade' => $request->student_grade
+            ]);
+            return Redirect::route('teacher.my.student', $request->subject_id)->with(['status'=>"grade.edited",'message'=>'successfully submitted grade!.']);
+        }
+    }
     // delete the my subjects
     public function deleteSubject(Request $request)
     {

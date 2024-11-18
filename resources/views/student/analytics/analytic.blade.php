@@ -8,7 +8,7 @@
             <div
                 class="bg-sidebar overflow-hidden shadow-sm mb-2 sm:rounded-lg flex flex-col md:flex-row justify-between items-center">
                 <div class="p-4 text-white text-xl">
-                    {{ __('Result of Evaluation Form') }}
+                    {{ __('Student Analytics for Student Subjects') }}
                 </div>
 
                 <div class="hs-dropdown relative z-[999] inline-flex">
@@ -64,10 +64,29 @@
             {{-- form --}}
             <div class="overflow-hidden shadow-sm rounded p-2">
                 {{-- @include('dean.evaluation.create') --}}
-                <span class="font-bold text-green uppercase tracking-wider">Overall result's of evaluation for our
-                    teacher's</span>
-
-                <canvas id="teacherEvaluationChart"></canvas>
+                <div class="flex items-center justify-between">
+                    <span class="flex-1 font-bold text-green uppercase tracking-wider">Analytics Result</span>
+                    <div class="relative w-[300px]">
+                        <select id="semesterFilter" name="nationality"
+                            class="peer py-3 pe-0 ps-8 block w-full bg-white rounded-md border-t-transparent border-b-2 border-x-transparent border-b-gray-200 text-sm focus:border-t-transparent focus:border-x-transparent focus:border-b-[#32620e] focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600">
+                            <option value="All">All Semesters</option>
+                            <option value="First Semester">First Semester</option>
+                            <option value="Second Semester">Second Semester</option>
+                            <option value="Summer">Summer</option>
+                            <!-- Add more nationalities as needed -->
+                        </select>
+                        <div
+                            class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-2 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                            <svg class="shrink-0 size-4 text-green dark:text-neutral-500"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512"
+                                fill="currentColor" stroke="currentColor">
+                                <path
+                                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="analyticChart"></canvas>
 
             </div>
 
@@ -85,9 +104,8 @@
                 console.log('connected')
                 let status = @json(session('status'));
                 let message = @json(session('message'));
-                let categories = @json($filteredCategoriesArray);
-                let result = @json($result);
-                console.log(result)
+                let subjectDatas = @json($subjectDatas);
+                console.log(subjectDatas)
                 if (status !== null) {
                     Swal.fire({
                         title: "Saved Successfully",
@@ -95,102 +113,144 @@
                         icon: status
                     });
                 }
-                // Example Dynamic Data
-                // const teachersData = [{
-                //         teacher: "Jean Dalisay",
-                //         ratings: {
-                //             "Knowledge and Preparation": 4,
-                //             "Teaching Methods": 3,
-                //             "Lectures": 2
+                // const subjectDatas = [{
+                //         subject: "Subject 1",
+                //         grade: {
+                //             "First Semester": 4,
+                //             "Second Semester": 3.5,
+                //             "Summer": 4.2
                 //         }
                 //     },
                 //     {
-                //         teacher: "John Reyes",
-                //         ratings: {
-                //             "Knowledge and Preparation": 5,
-                //             "Teaching Methods": 4,
-                //             "Lectures": 3
+                //         subject: "Subject 2",
+                //         grade: {
+                //             "First Semester": 1,
+                //             "Second Semester": 2.5,
+                //             "Summer": 3.0
                 //         }
                 //     },
                 //     {
-                //         teacher: "Maria Santos",
-                //         ratings: {
-                //             "Knowledge and Preparation": 3,
-                //             "Teaching Methods": 2,
-                //             "Lectures": 4
+                //         subject: "Subject 3",
+                //         grade: {
+                //             "First Semester": 2.75,
+                //             "Second Semester": 3.0,
+                //             "Summer": 2.5
+                //         }
+                //     },
+                //     {
+                //         subject: "Subject 4",
+                //         grade: {
+                //             "First Semester": 2.35,
+                //             "Second Semester": 3.5,
+                //             "Summer": 3.75
+                //         }
+                //     },
+                //     {
+                //         subject: "Subject 5",
+                //         grade: {
+                //             "First Semester": 4.75,
+                //             "Second Semester": 4.5,
+                //             "Summer": 4.8
                 //         }
                 //     }
                 // ];
 
-                // Get all unique rating categories dynamically
-                const ratingCategories = Array.from(
-                    new Set(result.flatMap(teacher => Object.keys(teacher.ratings)))
+
+                // Get all unique semester categories dynamically
+                const semesterCategories = Array.from(
+                    new Set(subjectDatas.flatMap(subject => Object.keys(subject.grade)))
                 );
 
-                // Create datasets dynamically for each teacher
-                const datasets = result.map((teacher, index) => ({
-                    label: teacher.teacher, // Teacher's name
-                    data: ratingCategories.map(category => teacher.ratings[category] ||
-                        0), // Map ratings, default to 0 if missing
+                // Create datasets dynamically for each subject and all semesters
+                const datasets = subjectDatas.map((subject, index) => ({
+                    label: subject.subject, // Subject name
+                    data: semesterCategories.map(semester => subject.grade[semester] ||
+                        0), // Map grades for each semester
                     backgroundColor: `rgba(${75 + index * 50}, ${192 - index * 30}, ${192 - index * 20}, 0.6)`, // Dynamic colors
                     borderColor: `rgba(${75 + index * 50}, ${192 - index * 30}, ${192 - index * 20}, 1)`,
                     borderWidth: 1
                 }));
-
                 // Chart.js setup
-                const ctx = document.getElementById('teacherEvaluationChart').getContext('2d');
-                const teacherEvaluationChart = new Chart(ctx, {
+                const ctx = document.getElementById('analyticChart').getContext('2d');
+                const analyticChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ratingCategories, // Dynamic categories as x-axis labels
-                        datasets: datasets // Each teacher as a dataset
+                        labels: semesterCategories, // All semesters as x-axis labels
+                        datasets: datasets // All subjects as datasets
                     },
                     options: {
                         responsive: true,
                         plugins: {
                             datalabels: {
-                                anchor: 'end', // Position the label at the top of the bar
+                                anchor: 'end',
                                 align: 'start',
-                                color: 'black', // Label color
+                                color: 'black',
                                 font: {
                                     weight: 'bold',
                                     size: 12
                                 },
                                 formatter: function(value) {
-                                    return value; // Display the rating value
+                                    return value.toFixed(2); // Display the rating value
                                 }
                             },
                             tooltip: {
                                 enabled: true
                             },
                             legend: {
-                                position: 'top' // Position legend at the top
+                                position: 'top'
                             }
                         },
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                min: 0, // Ensure that the Y-axis starts from 0
+                                min: 0,
                                 ticks: {
                                     stepSize: 1,
                                     callback: function(value) {
-                                        return value; // Label each tick as the rating (1-5)
+                                        return value;
                                     }
                                 }
                             }
                         },
-                        indexAxis: 'x', // Set X-axis to display teachers horizontally
+                        indexAxis: 'x',
                         layout: {
                             padding: {
                                 top: 50
                             }
                         },
-                        stacked: false // Disable stacking, so each bar is shown separately
+                        stacked: false
                     }
                 });
 
+                // jQuery: Event listener for the semester filter change
+                $('#semesterFilter').on('change', function() {
+                    const selectedSemester = $(this).val();
+                    updateChart(selectedSemester); // Update the chart with selected semester data
+                });
 
+                // jQuery function to update the chart based on the selected semester
+                function updateChart(selectedSemester) {
+                    const filteredDatasets = subjectDatas.map((subject, index) => {
+                        const data = selectedSemester === "All" ?
+                            semesterCategories.map(semester => subject.grade[semester] || 0) : [subject.grade[
+                                selectedSemester] || 0];
 
+                        return {
+                            label: subject.subject,
+                            data: data,
+                            backgroundColor: `rgba(${75 + index * 50}, ${192 - index * 30}, ${192 - index * 20}, 0.6)`,
+                            borderColor: `rgba(${75 + index * 50}, ${192 - index * 30}, ${192 - index * 20}, 1)`,
+                            borderWidth: 1
+                        };
+                    });
+
+                    // Update the chart labels and datasets based on the selected semester
+                    analyticChart.data.datasets = filteredDatasets;
+                    analyticChart.data.labels = selectedSemester === "All" ? semesterCategories : [
+                        selectedSemester
+                    ];
+                    analyticChart.update();
+                }
 
             })
         </script>

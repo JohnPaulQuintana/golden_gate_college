@@ -94,7 +94,7 @@
             </li>
   
   
-            <li class="hs-accordion" id="projects-accordion">
+            {{-- <li class="hs-accordion" id="projects-accordion">
               <button type="button" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-base text-white rounded-lg hover:bg-hover focus:outline-none focus:bg-hover dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200" aria-expanded="true" aria-controls="projects-accordion-child">
                 <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 Records
@@ -123,7 +123,7 @@
                   </li>
                 </ul>
               </div>
-            </li>
+            </li> --}}
 
           </ul>
         </nav>

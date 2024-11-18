@@ -65,19 +65,25 @@
                         Class Schedules for Class
                         {{ date('Y') }} - {{ date('Y') + 1 }}
                     </span>
-                    @foreach ($uploadedScheduled as $sched)
-                      @if ($sched->dean_id === Auth::user()->id)
-                        <button id="plus-sched"
-                            class="flex items-center gap-1 bg-slate-100 rounded-md p-1 hover:cursor-pointer">
-                            <svg class="size-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    @php
+                    $buttonRendered = false; // Initialize a flag
+                @endphp
+                
+                @foreach ($uploadedScheduled as $sched)
+                    @if ($sched->dean_id === Auth::user()->id && !$buttonRendered)
+                        <button id="plus-sched" class="flex items-center gap-1 bg-slate-100 rounded-md p-1 hover:cursor-pointer">
+                            <svg class="size-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 448 512">
+                                <!--! Font Awesome Free 6.6.0 -->
                                 <path
                                     d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
                             </svg>
                             <span class="text-red-500">create</span>
                         </button>
-                      @endif
-                    @endforeach
+                        @php
+                            $buttonRendered = true; // Set the flag to true after rendering the button
+                        @endphp
+                    @endif
+                @endforeach
                 </div>
                 <div class="p-2">
                     <!-- Timeline -->
@@ -110,7 +116,7 @@
                                     </h3>
 
                                     <p
-                                        class="bg-slate-100 font-semibold text-sm w-fit px-2 rounded-sm text-red-500 dark:text-neutral-200 capitalize">
+                                        class="bg-slate-100 font-semibold text-xl w-fit px-2 rounded-sm text-green dark:text-neutral-200 capitalize">
                                         
                                         @php
                                           $yearText = '';
@@ -132,8 +138,12 @@
                                                     break;
                                             }
                                         @endphp
-                                        {{ $sched->program }} - {{ $yearText }} | {{ $sched->semester }} Semester
+                                        {{ $sched->program }} 
                                     </p>
+
+                                    <p class="bg-slate-100 font-semibold text-sm w-fit px-2 rounded-sm text-slate-700 dark:text-neutral-200 capitalize">Section: {{ $sched->section }} </p>
+                                    <p class="bg-slate-100 font-semibold text-sm w-fit px-2 rounded-sm text-slate-700 dark:text-neutral-200 capitalize">College Level: {{ $yearText }} </p>
+                                    <p class="bg-slate-100 font-semibold text-sm w-fit px-2 rounded-sm text-slate-700 dark:text-neutral-200 capitalize">College Level: | {{ $sched->semester }} Semester </p>
 
                                     <ul class="list-disc ms-6 mt-3 space-y-1.5">
                                         <li class="ps-1 text-sm text-gray-600 dark:text-neutral-400">

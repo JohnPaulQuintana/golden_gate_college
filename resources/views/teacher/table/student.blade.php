@@ -233,10 +233,23 @@
                                     
                                     <td class="h-px w-72 whitespace-nowrap">
                                         <div class="px-6 py-3">
+                                            @if (!$st->semester_grade)
+                                                <span
+                                                    class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200">
+                                                    <a data-student_id="{{ $st->student_id }}" class="student_grade hover:cursor-pointer">Grade</a>
+                                                </span>
+                                            @else
                                             <span
                                                 class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200">
-                                                <a href="#">Grade</a>
+                                                <a 
+                                                    data-subject_id="{{ $st->semester_grade->subject_id }}"
+                                                    data-student_id="{{ $st->semester_grade->student_id }}"
+                                                    data-semester="{{ $st->semester_grade->semester }}"
+                                                    data-grade_id="{{ $st->semester_grade->id }}" 
+                                                    data-grade="{{ $st->semester_grade->student_grade }}" 
+                                                    class="edit_student_grade hover:cursor-pointer">Edit Grade</a>
                                             </span>
+                                            @endif
                                         </div>
                                     </td>
                                     

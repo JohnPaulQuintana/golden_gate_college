@@ -128,13 +128,16 @@
         </div>
     </div>
     @include('teacher.modal.enroll')
+    @include('teacher.modal.add_grade')
+    @include('teacher.modal.edit_grade')
     @section('scripts')
         <script>
             $(document).ready(function() {
                 console.log('subjects connected...')
                 const errors = @json($errors->toArray());
                 const success = @json(session('message'));
-                // console.log(department_info)
+                const students = @json($students);
+                console.log(students)
                 if (success) {
                     Swal.fire({
                         title: "Successfully Created!",
@@ -392,6 +395,36 @@
 
                 })
 
+                //add grade
+                $('.student_grade').click(function(){
+                    // alert($(this).data('student_id'))
+                    students.data.forEach(element => {
+                        // console.log(element)
+                        if(parseInt($(this).data('student_id')) === parseInt(element.student_id)){
+                            // console.log(element)
+                            $('#student_subject_id').val(parseInt(element.subject_id))
+                            $('#student_id_input').val(parseInt(element.student_id))
+                            $('#semester-input').val(element.semester+" semester")
+                            $('#grade-modal-btn').click();
+
+                        }
+                    });
+                })
+
+                $('.edit_student_grade').click(function(){
+                    let student_id = $(this).data('student_id')
+                    let subject_id = $(this).data('subject_id')
+                    let semester = $(this).data('semester')
+                    let grade_id = $(this).data('grade_id')
+                    let student_grade = $(this).data('grade')
+                    // alert($(this).data('grade_id'))
+                    $('#grade_id_input_edit').val(grade_id)
+                    $('#student_id_input_edit').val(student_id)
+                    $('#student_subject_id_edit').val(subject_id)
+                    $('#semester-input-edit').val(semester)
+                    $('#student-grade-edit').val(student_grade)
+                    $('#edit_grade-modal-btn').click()
+                })
                 
             })
         </script>

@@ -19,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Registrar\RegistrarController;
 use App\Http\Controllers\Registrar\RegistrarProgramController;
 use App\Http\Controllers\Roles\RoleController;
+use App\Http\Controllers\Student\AnalyticController;
 use App\Http\Controllers\Student\EnrollmentController;
 use App\Http\Controllers\StudentRecord\StudentRecordController;
 use App\Http\Controllers\Teacher\TeacherController;
@@ -138,6 +139,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::get('/evaluationForm', [EvaluationController::class, 'form'])->name('form');
         Route::post('/evaluationForm/save', [EvaluationController::class, 'submitRatings'])->name('form.save');
+    
+        Route::get('/analytics',[AnalyticController::class, 'analytics'])->name('analytics');
     });
 
     // Teacher Routes
@@ -149,6 +152,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/save-selected-subjects',[TeacherController::class, 'addSubjects'])->name('save.subject');
         Route::post('/delete-subjects',[TeacherController::class, 'deleteSubject'])->name('delete.subject');
         Route::post('/enrolled-student',[TeacherController::class, 'enrolledStudent'])->name('enrolled.student');
+        Route::post('/grade',[TeacherController::class, 'studentGrade'])->name('student.grade');
+        Route::post('/grade/edit',[TeacherController::class, 'studentGradeEdit'])->name('student.grade.edit');
     });
     
     // Cashier Routes
