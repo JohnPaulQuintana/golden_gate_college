@@ -80,6 +80,7 @@ class RoleController extends Controller
             ->where('enrolled_student_on_subjects.student_id', Auth::user()->id)
             ->get();
 
+        
         // dd($subjects);
         return view($role.'.dashboard', compact('initial','information','liabilities','tags','existingEnrollmentForm', 'totalPaid', 'totalPayable', 'subjects'));
     }
