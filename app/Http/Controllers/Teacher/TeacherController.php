@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Models\EnrolledStudentOnSubject;
 use App\Models\Enrollment;
+use App\Models\Quize;
 use App\Models\StudentGrade;
 use App\Models\subjects;
 use App\Models\Teacher;
@@ -54,7 +55,7 @@ class TeacherController extends Controller
                 // If there are valid subject IDs, we fetch the corresponding subject models
                 if (is_array($selectedSubjectIds)) {
                     $subjects = subjects::whereIn('subjects.id', $selectedSubjectIds)
-                        ->leftJoin('teacher_subjects', function($join) use ($item) {
+                        ->leftJoin('teacher_subjects', function ($join) use ($item) {
                             $join->on('subjects.id', '=', 'teacher_subjects.subject_id')
                                 ->where('teacher_subjects.college_level_number', '=', $item->year_level); // Additional condition
                         })
@@ -98,8 +99,10 @@ class TeacherController extends Controller
             ->leftJoin(
                 \DB::raw('(SELECT subject_id, COUNT(student_id) as enrolled_students_count
                         FROM enrolled_student_on_subjects
-                        GROUP BY subject_id) AS student_count'), 
-                'subjects.id', '=', 'student_count.subject_id'
+                        GROUP BY subject_id) AS student_count'),
+                'subjects.id',
+                '=',
+                'student_count.subject_id'
             )
             ->select('teacher_subjects.*', 'subjects.credits', 'subjects.user_id as dean_id', 'student_count.enrolled_students_count')
             // ->where('enrolled_student_on_subjects.teacher_id', Auth::user()->id)
@@ -107,66 +110,75 @@ class TeacherController extends Controller
             ->get();
 
         // dd($my_subjects);
-        $department_info = Teacher::join('departments','teachers.department_id', '=', 'departments.id')
+        $department_info = Teacher::join('departments', 'teachers.department_id', '=', 'departments.id')
             ->select(
-                'teachers.department_id', 'teachers.teacher_id',
-                'departments.department_name', 'departments.department_code', 'departments.dean_id')
-            ->where('teacher_id',Auth::user()->id)->first();
+                'teachers.department_id',
+                'teachers.teacher_id',
+                'departments.department_name',
+                'departments.department_code',
+                'departments.dean_id'
+            )
+            ->where('teacher_id', Auth::user()->id)->first();
 
         // dd($department_info);
-        if($department_info){
-            $enrolled_students = Enrollment::join('programs', 'enrollments.program_id','=','programs.id')
-            ->join('semesters', 'enrollments.semester_id', '=','semesters.id')
-            ->join('academic_years', 'enrollments.academic_year_id', '=','academic_years.id')
-            ->join('year_level_with_subjects', 'enrollments.year_level_with_subject_id','=','year_level_with_subjects.id')
-            ->select(
-                'enrollments.*',
-                'programs.program','programs.abbrev',
-                'semesters.name as semester',
-                'academic_years.academic_year',
-                'year_level_with_subjects.year_level'
+        if ($department_info) {
+            $enrolled_students = Enrollment::join('programs', 'enrollments.program_id', '=', 'programs.id')
+                ->join('semesters', 'enrollments.semester_id', '=', 'semesters.id')
+                ->join('academic_years', 'enrollments.academic_year_id', '=', 'academic_years.id')
+                ->join('year_level_with_subjects', 'enrollments.year_level_with_subject_id', '=', 'year_level_with_subjects.id')
+                ->select(
+                    'enrollments.*',
+                    'programs.program',
+                    'programs.abbrev',
+                    'semesters.name as semester',
+                    'academic_years.academic_year',
+                    'year_level_with_subjects.year_level'
                 )
-            ->where('enrollments.department',strtolower(($department_info->department_name)))
-            ->where('enrollments.status','enrolled')->get();
+                ->where('enrollments.department', strtolower(($department_info->department_name)))
+                ->where('enrollments.status', 'enrolled')->get();
 
             $department_info->enrolled = $enrolled_students;
         }
-        
+
         // dd($department_info);
-        return view('teacher.pages.my-subjects', compact('initial','my_subjects', 'department_info'));
+        return view('teacher.pages.my-subjects', compact('initial', 'my_subjects', 'department_info'));
     }
 
     //my student list
-    public function myStudents($id)
+    public function myStudents($subject_id)
     {
         $initial = $this->initialService->getInitials(Auth::user()->name);
-        $subject = subjects::find($id);
+        $subject = subjects::find($subject_id);
         // dd($subject);
-        $students = EnrolledStudentOnSubject::join('enrollments', 'enrolled_student_on_subjects.student_id','=','enrollments.user_id')
-            ->join('semesters', 'enrollments.semester_id','=','semesters.id')
-            ->join('academic_years','enrollments.academic_year_id','=','academic_years.id')
+        $students = EnrolledStudentOnSubject::join('enrollments', 'enrolled_student_on_subjects.student_id', '=', 'enrollments.user_id')
+            ->join('semesters', 'enrollments.semester_id', '=', 'semesters.id')
+            ->join('academic_years', 'enrollments.academic_year_id', '=', 'academic_years.id')
             ->select(
                 'enrolled_student_on_subjects.*',
-                'enrollments.student_no', 'enrollments.fullname','enrollments.age','enrollments.address','enrollments.contact_number',
+                'enrollments.student_no',
+                'enrollments.fullname',
+                'enrollments.age',
+                'enrollments.address',
+                'enrollments.contact_number',
                 'semesters.name as semester',
                 'academic_years.academic_year'
-                )
-            ->where('enrolled_student_on_subjects.subject_id', $id)
-            ->where('enrolled_student_on_subjects.teacher_id',Auth::user()->id)
+            )
+            ->where('enrolled_student_on_subjects.subject_id', $subject_id)
+            ->where('enrolled_student_on_subjects.teacher_id', Auth::user()->id)
             ->paginate(10);
         // dd($students);
         foreach ($students as $key => $value) {
-            $student_grade = StudentGrade::where('semester',$value->semester." semester")
-            ->where('student_id',$value->student_id)
-            ->where('teacher_id',Auth::user()->id)
-            ->first();
+            $student_grade = StudentGrade::where('semester', $value->semester . " semester")
+                ->where('student_id', $value->student_id)
+                ->where('teacher_id', Auth::user()->id)
+                ->first();
             $value->semester_grade = $student_grade;
             // dd($student_grade);
         }
         // dd($students);
-        return view('teacher.pages.my-student', compact('initial','subject','students'));
+        return view('teacher.pages.my-student', compact('initial', 'subject', 'students', 'subject_id'));
         // dd($id);
-        
+
     }
 
 
@@ -183,8 +195,6 @@ class TeacherController extends Controller
                 'subject_name' => $value['subject_name'],
                 'subject_code' => $value['subject_code'],
             ]);
-
-            
         }
         return response()->json([
             'status' => 'success',
@@ -211,42 +221,150 @@ class TeacherController extends Controller
     //student grade
     public function studentGrade(Request $request)
     {
-        // dd($request);
-        $existingRecord = StudentGrade::where('student_id',$request->student_id)
-        ->where('subject_id',$request->subject_id)
-        ->where('teacher_id',$request->teacher_id)
-        ->where('semester',$request->semester)
-        ->first();
-
-        if(!$existingRecord)
-        {
-            StudentGrade::create([
+        // Check if a record already exists
+        $studentGrade = StudentGrade::firstOrCreate(
+            [
                 'student_id' => $request->student_id,
                 'subject_id' => $request->subject_id,
                 'teacher_id' => Auth::user()->id,
                 'semester' => $request->semester,
-                'student_grade' => $request->student_grade
+            ],
+            [
+                'student_grade' => 0,
+                'quiz_grade' => 0,
+            ]
+        );
+
+        // Handle quiz grade
+        if ($request->grade_type === 'quiz') {
+            // Insert new quiz record
+            $quiz = Quize::create([
+                'grade_id' => $studentGrade->id,
+                'score' => $request->student_score,
+                'lp' => $request->passing_score,
             ]);
 
-            return Redirect::route('teacher.my.student', $request->subject_id)->with(['status'=>"grade",'message'=>'successfully submitted grade!.']);
+            // Calculate the average quiz grade
+            $totalQuizScore = Quize::where('grade_id', $studentGrade->id)->sum('score');
+            $totalQuizCount = Quize::where('grade_id', $studentGrade->id)->count();
+            $averageQuizGrade = $totalQuizCount > 0
+                ? ($totalQuizScore + $quiz->lp) / ($totalQuizCount + 1)
+                : 0;
+
+            // Update the student's grade
+            $studentGrade->update([
+                'quiz_grade' => $averageQuizGrade,
+                'student_grade' => $averageQuizGrade, // Update overall grade if needed
+            ]);
         }
+
+        // Redirect with success message
+        return Redirect::route('teacher.student.grade.table', [
+            'student_id' => $request->student_id,
+            'subject_id' => $request->subject_id,
+        ])->with([
+            'status' => 'grade',
+            'message' => 'Successfully submitted grade!',
+        ]);
     }
+
 
     //edit grade
     public function studentGradeEdit(Request $request)
     {
         // dd($request);
-        $record = StudentGrade::find($request->grade_id);
-        if($record){
+        $record = Quize::join('student_grades', 'quizes.grade_id', '=', 'student_grades.id')
+            ->select(
+                'quizes.*',
+                'student_grades.id as grade_id',
+                'student_grades.subject_id'
+            )
+            ->where('quizes.id', $request->grade_id)
+            ->first(); //quiz id
+        // dd($record);
+        if ($record) {
             $record->update([
-                'student_id' => $request->student_id,
-                'subject_id' => $request->subject_id,
-                'teacher_id' => Auth::user()->id,
-                'semester' => $request->semester,
-                'student_grade' => $request->student_grade
+                'score' => $request->student_grade,
             ]);
-            return Redirect::route('teacher.my.student', $request->subject_id)->with(['status'=>"grade.edited",'message'=>'successfully submitted grade!.']);
+
+            //update the student grade
+            $studentGrade = StudentGrade::where('id', $record->grade_id)->first();
+            // dd($studentGrade);
+            if ($studentGrade) {
+                // Calculate the average quiz grade
+                $totalQuizScore = Quize::where('grade_id', $studentGrade->id)->sum('score');
+                $totalQuizCount = Quize::where('grade_id', $studentGrade->id)->count();
+                $averageQuizGrade = $totalQuizCount > 0
+                    ? ($totalQuizScore) / ($totalQuizCount)
+                    : 0;
+
+                $studentGrade->update([
+                    'quiz_grade' => $averageQuizGrade,
+                    'student_grade' => $averageQuizGrade, // Update overall grade if needed
+                ]);
+                // Redirect with success message
+                return Redirect::route('teacher.student.grade.table', [
+                    'student_id' => $request->student_id,
+                    'subject_id' => $record->subject_id,
+                ])->with([
+                    'status' => 'grade.edit',
+                    'message' => 'Successfully submitted grade!',
+                ]);
+            }
         }
+    }
+
+    //grade table
+    public function grade($student_id, $subject_id)
+    {
+        // dd($student_id,$subject_id);
+        $initial = $this->initialService->getInitials(Auth::user()->name);
+        $subject = subjects::find($subject_id);
+        $students = EnrolledStudentOnSubject::join('enrollments', 'enrolled_student_on_subjects.student_id', '=', 'enrollments.user_id')
+            ->join('semesters', 'enrollments.semester_id', '=', 'semesters.id')
+            ->join('academic_years', 'enrollments.academic_year_id', '=', 'academic_years.id')
+            ->select(
+                'enrolled_student_on_subjects.*',
+                'enrollments.student_no',
+                'enrollments.fullname',
+                'enrollments.age',
+                'enrollments.address',
+                'enrollments.contact_number',
+                'semesters.name as semester',
+                'academic_years.academic_year'
+            )
+            ->where('enrolled_student_on_subjects.subject_id', $subject_id)
+            ->where('enrolled_student_on_subjects.teacher_id', Auth::user()->id)
+            ->paginate(10);
+        // dd($students);
+        foreach ($students as $key => $value) {
+            $student_grade = StudentGrade::join('quizes', 'student_grades.id', '=', 'quizes.grade_id')
+                ->select(
+                    'student_grades.*',
+                    'quizes.score as quiz_score',
+                    'quizes.lp',
+                    'quizes.created_at as date'
+                )
+                ->where('semester', $value->semester . " semester")
+                ->where('student_id', $value->student_id)
+                ->where('teacher_id', Auth::user()->id)
+                ->first();
+            $value->semester_grade = $student_grade;
+            // dd($student_grade);
+        }
+        // dd($students);
+        $student_grade = StudentGrade::join('quizes', 'student_grades.id', '=', 'quizes.grade_id')
+            ->select(
+                'student_grades.*',
+                'quizes.id as quiz_id',
+                'quizes.score as quiz_score',
+                'quizes.lp',
+                'quizes.created_at as dateString',
+                \DB::raw('"quizes" as type')
+            )
+            ->where('student_grades.student_id', $student_id)->paginate(10);
+        // dd($student_grade);
+        return view('teacher.pages.student-grade', compact('initial', 'student_grade', 'students', 'student_id'));
     }
     // delete the my subjects
     public function deleteSubject(Request $request)

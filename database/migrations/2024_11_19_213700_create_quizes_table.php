@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_grades', function (Blueprint $table) {
+        Schema::create('quizes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('subject_id');
-            $table->unsignedBigInteger('teacher_id');
-            $table->string('semester');
-            $table->decimal('student_grade', 5, 2);
-            $table->decimal('quiz_grade', 5, 2);
+            $table->unsignedBigInteger('grade_id');
+            $table->bigInteger('score')->default(0);
+            $table->bigInteger('lp')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_grades');
+        Schema::dropIfExists('quizes');
     }
 };

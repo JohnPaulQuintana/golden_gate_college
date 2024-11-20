@@ -15,6 +15,7 @@
             @csrf
             <input type="number" name="student_id" id="student_id_input" class="hidden">
             <input type="number" name="subject_id" id="student_subject_id" class="hidden ">
+            <input type="text" name="grade_type" id="grade_type" class="hidden">
             <div
                 class="relative flex flex-col bg-white border shadow-sm rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="absolute top-2 end-2">
@@ -67,11 +68,30 @@
                             </div>
                             {{-- grade --}}
                             <div class="mb-2 w-full">
-                                <label for="Semester Grade">Semester Grade:</label>
+                                <label for="Semester Grade">Student Score:</label>
                                 <div class="relative">
-                                    <input id="search-subjects" name="student_grade" type="number" step="0.01"
+                                    <input id="search-subjects" name="student_score" type="number" step="0.01"
                                         class="peer py-2 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        placeholder="Enter Student Grade" required>
+                                        placeholder="Enter Student Score" required>
+                                    <div
+                                        class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <svg class="shrink-0 size-4 text-green dark:text-neutral-500"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                            <path
+                                                d="M374.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-320 320c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l320-320zM128 128A64 64 0 1 0 0 128a64 64 0 1 0 128 0zM384 384a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z" />
+                                        </svg>
+
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- passing score --}}
+                            <div class="mb-2 w-full">
+                                <label for="Semester Grade">L.P:</label>
+                                <div class="relative">
+                                    <input name="passing_score" id="passing_score" type="number" step="0.01"
+                                        class="peer py-2 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                        placeholder="Enter Passing Point" required>
                                     <div
                                         class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                         <svg class="shrink-0 size-4 text-green dark:text-neutral-500"
@@ -102,7 +122,7 @@
                     <button
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border shadow bg-white text-green disabled:opacity-50 disabled:pointer-events-none"
                         href="#">
-                        Submit Student Grade
+                        Submit Student Score
                     </button>
                 </div>
             </div>

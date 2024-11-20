@@ -15,7 +15,6 @@
             @csrf
             <input type="number" name="grade_id" id="grade_id_input_edit" class="hidden">
             <input type="number" name="student_id" id="student_id_input_edit" class="hidden">
-            <input type="number" name="subject_id" id="student_subject_id_edit" class="hidden">
             <div
                 class="relative flex flex-col bg-white border shadow-sm rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="absolute top-2 end-2">
@@ -48,8 +47,10 @@
                         <!-- Card -->
                         <div class="relative bg-white shadow-lg rounded-lg p-6 flex flex-col items-start transform">
                             {{-- Semester --}}
-                            <div class="mb-2 w-full">
+                            {{-- <div class="mb-2 w-full">
+
                                 <label for="Semester Grade">Semester:</label>
+
                                 <div class="relative">
                                     <input id="semester-input-edit" name="semester" type="text"
                                         class="peer py-2 px-4 ps-11 block uppercase w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -65,10 +66,11 @@
 
                                     </div>
                                 </div>
-                            </div>
-                            {{-- grade --}}
+
+                            </div> --}}
+                            {{-- edit grade --}}
                             <div class="mb-2 w-full">
-                                <label for="Semester Grade">Semester Grade:</label>
+                                <label for="Semester Grade">Edit Grade:</label>
                                 <div class="relative">
                                     <input id="student-grade-edit" name="student_grade" type="number" step="0.01"
                                         class="peer py-2 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"

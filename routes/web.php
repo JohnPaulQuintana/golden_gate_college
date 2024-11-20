@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/enrolled-student',[TeacherController::class, 'enrolledStudent'])->name('enrolled.student');
         Route::post('/grade',[TeacherController::class, 'studentGrade'])->name('student.grade');
         Route::post('/grade/edit',[TeacherController::class, 'studentGradeEdit'])->name('student.grade.edit');
+        Route::get('/grade/table/{student_id}/{subject_id}',[TeacherController::class, 'grade'])->name('student.grade.table');
     });
     
     // Cashier Routes

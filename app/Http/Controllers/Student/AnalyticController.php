@@ -40,6 +40,7 @@ class AnalyticController extends Controller
                 $subjectDatas[] = [
                     'subject' => $grade->subject_name,
                     'grade' => [
+                        "Quiz Result" => $grade->quiz_grade,
                         "First Semester" => null, // Default value for each semester
                         "Second Semester" => null,
                         "Summer" => null,

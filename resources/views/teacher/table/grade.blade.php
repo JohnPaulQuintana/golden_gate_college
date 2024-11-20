@@ -10,22 +10,42 @@
                     <div
                         class="px-6 py-4 gap-3 flex justify-between items-center border-b border-gray-200 dark:border-neutral-700">
                         <div>
-                            <h2 class="flex items-center  gap-1 text-xl font-semibold text-green-800 dark:text-neutral-200">
-                              <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="16"
-                                height="16" fill="currentColor" viewBox="0 0 640 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c1.8 0 3.5-.2 5.3-.5c-76.3-55.1-99.8-141-103.1-200.2c-16.1-4.8-33.1-7.3-50.7-7.3l-91.4 0zm308.8-78.3l-120 48C358 277.4 352 286.2 352 296c0 63.3 25.9 168.8 134.8 214.2c5.9 2.5 12.6 2.5 18.5 0C614.1 464.8 640 359.3 640 296c0-9.8-6-18.6-15.1-22.3l-120-48c-5.7-2.3-12.1-2.3-17.8 0zM591.4 312c-3.9 50.7-27.2 116.7-95.4 149.7l0-187.8L591.4 312z"/></svg>  
-                              
-                                Latest History
+                            <h2
+                                class="flex items-center  gap-1 text-xl font-semibold text-green-800 dark:text-neutral-200">
+                                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor"
+                                    viewBox="0 0 640 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c1.8 0 3.5-.2 5.3-.5c-76.3-55.1-99.8-141-103.1-200.2c-16.1-4.8-33.1-7.3-50.7-7.3l-91.4 0zm308.8-78.3l-120 48C358 277.4 352 286.2 352 296c0 63.3 25.9 168.8 134.8 214.2c5.9 2.5 12.6 2.5 18.5 0C614.1 464.8 640 359.3 640 296c0-9.8-6-18.6-15.1-22.3l-120-48c-5.7-2.3-12.1-2.3-17.8 0zM591.4 312c-3.9 50.7-27.2 116.7-95.4 149.7l0-187.8L591.4 312z" />
+                                </svg>
+
+                                John Paul Y. Quintana
                             </h2>
                             <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                List of new added <span class="font-bold">Student's</span> .
+                                List of new added <span class="font-bold">grade/score's</span> .
                             </p>
                         </div>
 
-                        
+
 
                         <div>
                             <div class="inline-flex gap-x-2">
 
+                                {{-- <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                    Add Quiz
+                                    <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                </button> --}}
+                                <button type="button" data-type="quiz" data-student_id="{{ $student_id }}"
+                                    class="add_quiz hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                    Add Quiz
+                                    <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
                                 {{-- <div class="hs-dropdown relative inline-flex">
                                     <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                                         Filter
@@ -46,18 +66,25 @@
                                         
                                     </div>
                                 </div> --}}
-                                
+
                                 <div>
                                     {{-- <label for="hs-search-box-with-loading-1" class="block text-sm font-medium mb-2 dark:text-white">Search</label> --}}
                                     <div class="relative">
-                                      <input type="text" id="baji_search" name="baji_search" class="py-3 px-4 ps-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Search...">
-                                      <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
-                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
-                                      </div>
+                                        <input type="text" id="baji_search" name="baji_search"
+                                            class="py-3 px-4 ps-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                            placeholder="Search...">
+                                        <div
+                                            class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
+                                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                                <path
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
 
-                                
+
 
                                 {{-- <a id="grant_add_user" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                                     href="#">
@@ -72,18 +99,23 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- End Header -->
 
                     <!-- Table -->
-                    <table id="baji_table" class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                    <table id="score_table" class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                         <thead class="bg-gray-50 dark:bg-neutral-800">
                             <tr>
 
                                 <th scope="col" class="ps-6 py-3 text-start">
                                     <label for="hs-at-with-checkboxes-main" class="flex">
-                                        
-                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96l0 64c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-64c0-35.3-28.7-64-64-64L64 32zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64l0 64c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-64c0-35.3-28.7-64-64-64L64 288zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/></svg>
+
+                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" fill="currentColor"
+                                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                            <path
+                                                d="M64 32C28.7 32 0 60.7 0 96l0 64c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-64c0-35.3-28.7-64-64-64L64 32zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64l0 64c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-64c0-35.3-28.7-64-64-64L64 288zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z" />
+                                        </svg>
                                     </label>
                                 </th>
 
@@ -91,7 +123,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Student No.
+                                            Grade Id.
                                         </span>
                                     </div>
                                 </th>
@@ -100,7 +132,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Fullname
+                                            Semester Grade
                                         </span>
                                     </div>
                                 </th>
@@ -109,34 +141,11 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Age
+                                            Score
                                         </span>
                                     </div>
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-start">
-                                    <div class="flex items-center gap-x-2">
-                                        <span
-                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Address
-                                        </span>
-                                    </div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-start">
-                                    <div class="flex items-center gap-x-2">
-                                        <span
-                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Contact Number
-                                        </span>
-                                    </div>
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-start">
-                                    <div class="flex items-center gap-x-2">
-                                        <span
-                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Semesters
-                                        </span>
-                                    </div>
-                                </th>
+
                                 <th scope="col" class="px-6 py-3 text-start">
                                     <div class="flex items-center gap-x-2">
                                         <span
@@ -146,38 +155,44 @@
                                     </div>
                                 </th>
 
-                                
-                                    <th scope="col" class="px-6 py-3 text-start">
-                                        <div class="flex items-center gap-x-2">
-                                            <span
-                                                class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                more
-                                                
-                                            </span>
-                                        </div>
-                                    </th>
 
-                                
+                                <th scope="col" class="px-6 py-3 text-start">
+                                    <div class="flex items-center gap-x-2">
+                                        <span
+                                            class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                            more
+
+                                        </span>
+                                    </div>
+                                </th>
+
+
                             </tr>
                         </thead>
 
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                            
-                            @foreach ($students as $st)
-                                <tr class="@if($loop->odd) bg-green-50 dark:bg-neutral-800 @else bg-white dark:bg-neutral-900 @endif">
+
+                            @foreach ($student_grade as $st)
+                                <tr
+                                    class="@if ($loop->odd) bg-green-50 dark:bg-neutral-800 @else bg-white dark:bg-neutral-900 @endif">
 
                                     <td class="size-px whitespace-nowrap">
                                         <div class="ps-6 py-3">
                                             <label for="hs-at-with-checkboxes-5" class="flex">
-                                               <svg class="size-4 text-slate-700" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 80l0 48c0 44.2-100.3 80-224 80S0 172.2 0 128L0 80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6L448 288c0 44.2-100.3 80-224 80S0 332.2 0 288L0 186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6l0 85.9c0 44.2-100.3 80-224 80S0 476.2 0 432l0-85.9z"/></svg>
+                                                <svg class="size-4 text-slate-700" xmlns="http://www.w3.org/2000/svg"
+                                                    width="16" height="16" fill="currentColor"
+                                                    viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                                    <path
+                                                        d="M448 80l0 48c0 44.2-100.3 80-224 80S0 172.2 0 128L0 80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6L448 288c0 44.2-100.3 80-224 80S0 332.2 0 288L0 186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6l0 85.9c0 44.2-100.3 80-224 80S0 476.2 0 432l0-85.9z" />
+                                                </svg>
                                             </label>
                                         </div>
                                     </td>
-                                    
+
                                     <td class="h-px w-72 whitespace-nowrap">
-                                        
+
                                         <div class="px-6 py-3">
-                                            {{ $st->student_no }}
+                                            {{ $st->id }}
                                         </div>
                                     </td>
 
@@ -185,7 +200,7 @@
                                         <div class="px-6 py-3">
                                             <span
                                                 class="block text-sm capitalize font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->fullname }}
+                                                {{ $st->student_grade }}
                                             </span>
                                         </div>
                                     </td>
@@ -193,50 +208,31 @@
                                         <div class="px-6 py-3">
                                             <span
                                                 class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->age }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="h-px w-72 whitespace-nowrap">
-                                        <div class="px-6 py-3">
-                                            <span
-                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->address }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="h-px w-72 whitespace-nowrap">
-                                        <div class="px-6 py-3">
-                                            <span
-                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->contact_number }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="h-px w-72 whitespace-nowrap">
-                                        <div class="px-6 py-3">
-                                            <span
-                                                class="block text-xs capitalize font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->semester }} | {{ $st->academic_year }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="h-px w-72 whitespace-nowrap">
-                                        <div class="px-6 py-3">
-                                            <span
-                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->created_at->format('Y-m-d') }}
+                                                {{ $st->quiz_score }}
                                             </span>
                                         </div>
                                     </td>
 
-                                    
                                     <td class="h-px w-72 whitespace-nowrap">
                                         <div class="px-6 py-3">
                                             <span
-                                            class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200">
-                                            <a href="{{ route('teacher.student.grade.table', ["student_id"=>$st->student_id,'subject_id'=>$subject_id]) }}" data-student_id="{{ $st->student_id }}" class="student_grade hover:cursor-pointer">Grade</a>
-                                        </span>
+                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
+                                                {{ $st->updated_at->format('Y-m-d') }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+
+                                    <td class="h-px w-72 whitespace-nowrap">
+                                        <div class="px-6 py-3">
+                                            <span
+                                                class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200">
+                                                <a 
+                                                    data-student_id="{{ $student_id }}"
+                                                    data-score="{{ $st->quiz_score }}"
+                                                    data-quiz_id="{{ $st->quiz_id }}"
+                                                    class="edit_student_grade hover:cursor-pointer">Edit</a>
+                                            </span>
                                             {{-- @if (!$st->semester_grade)
                                                 <span
                                                     class="block text-sm font-semibold w-fit bg-slate-100 rounded-md px-2 text-red-500 dark:text-neutral-200">
@@ -256,9 +252,9 @@
                                             @endif --}}
                                         </div>
                                     </td>
-                                    
-                                    
-                                    
+
+
+
                                 </tr>
                             @endforeach
 
@@ -268,52 +264,73 @@
                     <!-- End Table -->
 
                     <!-- Custom Footer -->
-                        <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
-                            <div>
-                                <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">{{ $students->total() }}</span> results -
-                                    <span class="font-semibold text-gray-800 dark:text-neutral-200">({{ $students->count() }} on this page)</span>
-                                </p>
-                            </div>
+                    <div
+                        class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-neutral-400">
+                                <span
+                                    class="font-semibold text-gray-800 dark:text-neutral-200">{{ $student_grade->total() }}</span>
+                                results -
+                                <span
+                                    class="font-semibold text-gray-800 dark:text-neutral-200">({{ $student_grade->count() }}
+                                    on this page)</span>
+                            </p>
+                        </div>
 
-                            <div>
-                                <div class="inline-flex gap-x-2">
-                                    {{-- Previous Button --}}
-                                    @if ($students->onFirstPage())
-                                        <button type="button" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm opacity-50 cursor-not-allowed dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:opacity-50">
-                                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="m15 18-6-6 6-6" />
-                                            </svg>
-                                            Prev
-                                        </button>
-                                    @else
-                                        <a href="{{ $students->previousPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
-                                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="m15 18-6-6 6-6" />
-                                            </svg>
-                                            Prev
-                                        </a>
-                                    @endif
+                        <div>
+                            <div class="inline-flex gap-x-2">
 
-                                    {{-- Next Button --}}
-                                    @if ($students->hasMorePages())
-                                        <a href="{{ $students->nextPageUrl() }}" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
-                                            Next
-                                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="m9 18 6-6-6-6" />
-                                            </svg>
-                                        </a>
-                                    @else
-                                        <button type="button" class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm opacity-50 cursor-not-allowed dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:opacity-50">
-                                            Next
-                                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="m9 18 6-6-6-6" />
-                                            </svg>
-                                        </button>
-                                    @endif
-                                </div>
+                                @if ($student_grade->onFirstPage())
+                                    <button type="button"
+                                        class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm opacity-50 cursor-not-allowed dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:opacity-50">
+                                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m15 18-6-6 6-6" />
+                                        </svg>
+                                        Prev
+                                    </button>
+                                @else
+                                    <a href="{{ $student_grade->previousPageUrl() }}"
+                                        class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m15 18-6-6 6-6" />
+                                        </svg>
+                                        Prev
+                                    </a>
+                                @endif
+
+
+                                @if ($student_grade->hasMorePages())
+                                    <a href="{{ $student_grade->nextPageUrl() }}"
+                                        class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                                        Next
+                                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </a>
+                                @else
+                                    <button type="button"
+                                        class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm opacity-50 cursor-not-allowed dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:opacity-50">
+                                        Next
+                                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </button>
+                                @endif
                             </div>
                         </div>
+                    </div>
                     <!-- End Custom Footer -->
                 </div>
             </div>
