@@ -178,7 +178,8 @@
                         console.log(element)
                         if (parseInt($(this).data('student_id')) === parseInt(element.student_id)) {
                             // console.log(element)
-                            $('#grade_type').val($(this).data('type'))
+                            let type = $(this).data('type');
+                            $('#grade_type').val(type)
                             $('#passing_score')
                                 .val(element.semester_grade && element.semester_grade.lp ? parseInt(
                                     element.semester_grade.lp) : '')
@@ -188,7 +189,15 @@
                             $('#student_subject_id').val(parseInt(element.subject_id))
                             $('#student_id_input').val(parseInt(element.student_id))
                             $('#semester-input').val(element.semester + " semester")
+                            
                             $('#grade-modal-btn').click();
+                            // switch (type) {
+                            //     case 'quiz':
+                            //         break;
+                            
+                            //     default:
+                            //         break;
+                            // }
 
                         }
                     });
@@ -198,10 +207,12 @@
                     let quiz_id = $(this).data('quiz_id')
                     let quiz_score = $(this).data('score')
                     let student_id = $(this).data('student_id')
+                    let grade_type = $(this).data('type')
 
                     $('#grade_id_input_edit').val(parseInt(quiz_id))
                     $('#student-grade-edit').val(parseInt(quiz_score))
                     $('#student_id_input_edit').val(parseInt(student_id))
+                    $('#grade_type_input_edit').val(grade_type)
                     console.log(quiz_id,quiz_score)
                     // let subject_id = $(this).data('subject_id')
                     // let semester = $(this).data('semester')

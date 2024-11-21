@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class StudentGrade extends Model
 {
     use HasFactory;
-    protected $fillable = ['student_id','teacher_id','subject_id','semester','student_grade','quiz_grade'];
+    protected $fillable = ['student_id','teacher_id','subject_id','semester','student_grade','quiz_grade','activities','cscp','major_exam','final_term'];
 }

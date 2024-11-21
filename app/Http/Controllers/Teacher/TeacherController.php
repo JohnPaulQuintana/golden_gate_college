@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Teacher;
 
 // use \DB;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\EnrolledStudentOnSubject;
 use App\Models\Enrollment;
+use App\Models\MajorExam;
 use App\Models\Quize;
 use App\Models\StudentGrade;
 use App\Models\subjects;
@@ -41,10 +43,12 @@ class TeacherController extends Controller
 
         // dd($teacher);
         if ($teacher->department) {
+            // dd(true);
             // Retrieve subjects and year levels for the dean associated with the teacher's department
             // $subjects = subjects::where('user_id', $teacher->department->dean_id)->get();
             $yearLevels = YearLevelWithSubjects::where('user_id', $teacher->department->dean_id)->get();
 
+            // dd($teacher->department->dean_id);
             // Add subjects and year level groups to the teacher's data
             // $teacher->subjects = $subjects;
 
@@ -221,42 +225,130 @@ class TeacherController extends Controller
     //student grade
     public function studentGrade(Request $request)
     {
+        // dd($request);
         // Check if a record already exists
-        $studentGrade = StudentGrade::firstOrCreate(
+        // $studentGrade = StudentGrade::firstOrCreate(
+        //     [
+        //         'student_id' => $request->student_id,
+        //         'subject_id' => $request->subject_id,
+        //         'activities' => 0,
+        //         'teacher_id' => Auth::user()->id,
+        //         'semester' => $request->semester,
+        //     ],
+        //     [
+        //         'student_grade' => 0,
+        //         'quiz_grade' => 0,
+        //     ]
+        // );
+
+        $studentGrade = StudentGrade::firstOrNew(
             [
                 'student_id' => $request->student_id,
                 'subject_id' => $request->subject_id,
                 'teacher_id' => Auth::user()->id,
                 'semester' => $request->semester,
-            ],
-            [
-                'student_grade' => 0,
-                'quiz_grade' => 0,
             ]
         );
-
-        // Handle quiz grade
-        if ($request->grade_type === 'quiz') {
-            // Insert new quiz record
-            $quiz = Quize::create([
-                'grade_id' => $studentGrade->id,
-                'score' => $request->student_score,
-                'lp' => $request->passing_score,
-            ]);
-
-            // Calculate the average quiz grade
-            $totalQuizScore = Quize::where('grade_id', $studentGrade->id)->sum('score');
-            $totalQuizCount = Quize::where('grade_id', $studentGrade->id)->count();
-            $averageQuizGrade = $totalQuizCount > 0
-                ? ($totalQuizScore + $quiz->lp) / ($totalQuizCount + 1)
-                : 0;
-
-            // Update the student's grade
-            $studentGrade->update([
-                'quiz_grade' => $averageQuizGrade,
-                'student_grade' => $averageQuizGrade, // Update overall grade if needed
-            ]);
+        
+        // If the record doesn't exist, set default values
+        if (!$studentGrade->exists) {
+            $studentGrade->activities = 0;
+            $studentGrade->student_grade = 0;
+            $studentGrade->quiz_grade = 0;
+            $studentGrade->save();
         }
+
+        // $studentGrade = StudentGrade::where();
+        // dd();
+
+        switch ($request->grade_type) {
+            case 'quiz':
+                // Insert new quiz record
+                $quiz = Quize::create([
+                    'grade_id' => $studentGrade->id,
+                    'score' => $request->student_score,
+                    'lp' => 50,
+                    'type' => $request->grade_type
+                ]);
+                // Update the student's grade
+                $grades = $this->finalTerm($studentGrade->id);
+                $studentGrade->update([
+                    'quiz_grade' => $this->average($studentGrade->id, $request->grade_type),
+                    'student_grade' => $grades[0], // Update overall grade if needed
+                    'final_term' => $grades[1], // Update overall grade if needed
+                ]);
+                break;
+            case 'activity':
+                // Insert new quiz record
+                $quiz = Quize::create([
+                    'grade_id' => $studentGrade->id,
+                    'score' => $request->student_score,
+                    'lp' => 50,
+                    'type' => $request->grade_type
+                ]);
+                // Update the student's grade
+                $grades = $this->finalTerm($studentGrade->id);
+                $studentGrade->update([
+                    'activities' => $this->average($studentGrade->id, $request->grade_type),
+                    'student_grade' => $grades[0], // Update overall grade if needed
+                    'final_term' => $grades[1], // Update overall grade if needed// 'student_grade' => $this->average($studentGrade->id, $request->grade_type), // Update overall grade if needed
+                ]);
+                break;
+            case 'attendance':
+                $attend = Attendance::create([
+                    'grade_id' => $studentGrade->id,
+                    'attendance' => $request->student_score,
+                    'type' => $request->grade_type
+                ]);
+
+                //attendance calculation
+
+                $grades = $this->finalTerm($studentGrade->id);
+                $studentGrade->update([
+                    'cscp' => $this->attendanceAverage($studentGrade->id, $request->student_score),
+                    'student_grade' => $grades[0], // Update overall grade if needed
+                    'final_term' => $grades[1],
+                ]);
+                break;
+
+            case "exam":
+                // Find if data exists for the given studentGrade ID
+                $majorData = MajorExam::where('grade_id', $studentGrade->id)->first();
+
+                if (!$majorData) {
+                    // If no data exists, insert a new record
+                    $major = MajorExam::create([
+                        'grade_id' => $studentGrade->id, // Link to the studentGrade ID
+                        'semis' => $request->student_score // Insert the value into the semis field
+                    ]);
+
+                    // return response()->json(['message' => 'New data inserted for semis'], 201);
+                } else {
+                    // If data exists, update the finals column
+                    $majorData->update([
+                        'finals' => $request->student_score // Update the finals field
+                    ]);
+                    // Optional: Handle the case where data already exists
+                    // return response()->json(['message' => 'Data already exists, no insertion made'], 200);
+                }
+                $grades = $this->finalTerm($studentGrade->id);
+                // dd($grades);
+                $studentGrade->update([
+                    'major_exam' => $this->majorAverage($studentGrade->id),
+                    // 'student_grade' => $this->average($studentGrade->id, $request->grade_type), // Update overall grade if needed
+                    'student_grade' => $grades[0], // Update overall grade if needed
+                    'final_term' => $grades[1],
+                ]);
+                break;
+            default:
+                // Update the student's grade
+                $studentGrade->update([
+                    'quiz_grade' => 0,
+                    'student_grade' => 0
+                ]);
+                break;
+        }
+
 
         // Redirect with success message
         return Redirect::route('teacher.student.grade.table', [
@@ -273,45 +365,145 @@ class TeacherController extends Controller
     public function studentGradeEdit(Request $request)
     {
         // dd($request);
-        $record = Quize::join('student_grades', 'quizes.grade_id', '=', 'student_grades.id')
-            ->select(
-                'quizes.*',
-                'student_grades.id as grade_id',
-                'student_grades.subject_id'
-            )
-            ->where('quizes.id', $request->grade_id)
-            ->first(); //quiz id
-        // dd($record);
-        if ($record) {
-            $record->update([
-                'score' => $request->student_grade,
-            ]);
 
-            //update the student grade
-            $studentGrade = StudentGrade::where('id', $record->grade_id)->first();
-            // dd($studentGrade);
-            if ($studentGrade) {
-                // Calculate the average quiz grade
-                $totalQuizScore = Quize::where('grade_id', $studentGrade->id)->sum('score');
-                $totalQuizCount = Quize::where('grade_id', $studentGrade->id)->count();
-                $averageQuizGrade = $totalQuizCount > 0
-                    ? ($totalQuizScore) / ($totalQuizCount)
-                    : 0;
+        switch ($request->grade_type) {
+            case 'quiz':
+                $record = Quize::join('student_grades', 'quizes.grade_id', '=', 'student_grades.id')
+                    ->select(
+                        'quizes.*',
+                        'student_grades.id as grade_id',
+                        'student_grades.subject_id'
+                    )
+                    ->where('quizes.id', $request->grade_id)
+                    ->first(); //quiz id
+                $record->update([
+                    'score' => $request->student_grade,
+                ]);
 
+                $studentGrade = StudentGrade::where('id', $record->grade_id)->first();
+                // Update the student's grade
                 $studentGrade->update([
-                    'quiz_grade' => $averageQuizGrade,
-                    'student_grade' => $averageQuizGrade, // Update overall grade if needed
+                    'quiz_grade' => $this->average($studentGrade->id, $request->grade_type),
+                    // 'student_grade' => $this->average($studentGrade->id, $request->grade_type), // Update overall grade if needed
                 ]);
-                // Redirect with success message
-                return Redirect::route('teacher.student.grade.table', [
-                    'student_id' => $request->student_id,
-                    'subject_id' => $record->subject_id,
-                ])->with([
-                    'status' => 'grade.edit',
-                    'message' => 'Successfully submitted grade!',
+                break;
+            case 'activity':
+                $record = Quize::join('student_grades', 'quizes.grade_id', '=', 'student_grades.id')
+                    ->select(
+                        'quizes.*',
+                        'student_grades.id as grade_id',
+                        'student_grades.subject_id'
+                    )
+                    ->where('quizes.id', $request->grade_id)
+                    ->first(); //quiz id
+                $record->update([
+                    'score' => $request->student_grade,
                 ]);
+
+                $studentGrade = StudentGrade::where('id', $record->grade_id)->first();
+                // Update the student's grade
+                $studentGrade->update([
+                    'activities' => $this->average($studentGrade->id, $request->grade_type),
+                    // 'student_grade' => $this->average($studentGrade->id, $request->grade_type), // Update overall grade if needed
+                ]);
+                break;
+
+            case 'attendace':
+                $record = Attendance::join('student_grades', 'attendances.grade_id', '=', 'student_grades.id')
+                    ->select(
+                        'attendances.*',
+                        'student_grades.id as grade_id',
+                        'student_grades.subject_id'
+                    )
+                    ->where('attendances.id', $request->grade_id)
+                    ->first(); //quiz id
+                break;
+
+            default:
+                // Update the student's grade
+                // $studentGrade->update([
+                //     'quiz_grade' => 0,
+                //     'student_grade' => 0
+                // ]);
+                break;
+        }
+        // Redirect with success message
+        return Redirect::route('teacher.student.grade.table', [
+            'student_id' => $request->student_id,
+            'subject_id' => $record->subject_id,
+        ])->with([
+            'status' => 'grade.edit',
+            'message' => 'Successfully submitted grade!',
+        ]);
+    }
+
+    //calculate final term grade
+    private function finalTerm($grade_id)
+    {
+        $student_grade = StudentGrade::where('id', $grade_id)->first();
+        // dd($student_grade);
+        // Calculate the weighted sum
+        $result = ($student_grade->quiz_grade * 0.2) + ($student_grade->cscp * 0.4) + ($student_grade->major_exam * 0.4);
+        // Reference table for grade mapping
+        $referenceTable = [
+            ['min' => 97.5, 'grade' => 1.00],
+            ['min' => 94.5, 'grade' => 1.25],
+            ['min' => 91.5, 'grade' => 1.50],
+            ['min' => 88.5, 'grade' => 1.75],
+            ['min' => 85.5, 'grade' => 2.00],
+            ['min' => 82.5, 'grade' => 2.25],
+            ['min' => 79.5, 'grade' => 2.50],
+            ['min' => 76.5, 'grade' => 2.75],
+            ['min' => 74.5, 'grade' => 3.00],
+        ];
+
+        // Map the result to a grade and threshold
+        $grade = null;
+        $threshold = null;
+
+        foreach ($referenceTable as $range) {
+            if ($result >= $range['min']) {
+                $grade = $range['grade'];
+                $threshold = $range['min'];
+                break; // Stop checking once the appropriate grade and threshold are found
             }
         }
+
+        // dd($result, $grade);
+        // Return the result, grade, and threshold
+        return [$result ?? 0, $grade ?? 0, $threshold ?? 0];
+    }
+
+    //private function calculate average
+    private function average($grade_id, $type)
+    {
+        // Calculate the average quiz grade
+        $totalQuizScore = Quize::where('grade_id', $grade_id)->where('type', $type)->sum('score');
+        $totalQuizCount = Quize::where('grade_id', $grade_id)->where('type', $type)->count();
+        $averageQuizGrade = $totalQuizCount > 0
+            ? ($totalQuizScore) / ($totalQuizCount)
+            : 0;
+        return $averageQuizGrade;
+    }
+
+    //major calculation
+    private function majorAverage($grade_id)
+    {
+        $majorData = MajorExam::where('grade_id', $grade_id)->first();
+        // Calculate the total of semis and finals
+        $total = $majorData->semis + $majorData->finals;
+        return $total / 2;
+    }
+
+    //attendance calculcation
+    private function attendanceAverage($grade_id, $attend)
+    {
+        $total = StudentGrade::find($grade_id);
+
+        //calculation
+        $sum = ($total->activities * 0.8) + ($attend * 0.2);
+
+        return $sum;
     }
 
     //grade table
@@ -323,6 +515,7 @@ class TeacherController extends Controller
         $students = EnrolledStudentOnSubject::join('enrollments', 'enrolled_student_on_subjects.student_id', '=', 'enrollments.user_id')
             ->join('semesters', 'enrollments.semester_id', '=', 'semesters.id')
             ->join('academic_years', 'enrollments.academic_year_id', '=', 'academic_years.id')
+
             ->select(
                 'enrolled_student_on_subjects.*',
                 'enrollments.student_no',
@@ -339,11 +532,15 @@ class TeacherController extends Controller
         // dd($students);
         foreach ($students as $key => $value) {
             $student_grade = StudentGrade::join('quizes', 'student_grades.id', '=', 'quizes.grade_id')
+                // ->leftJoin('attendances', 'student_grades.id', '=', 'attendances.grade_id')
                 ->select(
                     'student_grades.*',
                     'quizes.score as quiz_score',
                     'quizes.lp',
-                    'quizes.created_at as date'
+                    'quizes.created_at as date',
+                    // 'attendances.id as attendance_id',
+                    // 'attendances.attendance',
+                    // 'attendances.type'
                 )
                 ->where('semester', $value->semester . " semester")
                 ->where('student_id', $value->student_id)
@@ -354,13 +551,17 @@ class TeacherController extends Controller
         }
         // dd($students);
         $student_grade = StudentGrade::join('quizes', 'student_grades.id', '=', 'quizes.grade_id')
+            // ->leftJoin('attendances', 'student_grades.id', '=', 'attendances.grade_id')
             ->select(
                 'student_grades.*',
                 'quizes.id as quiz_id',
                 'quizes.score as quiz_score',
                 'quizes.lp',
                 'quizes.created_at as dateString',
-                \DB::raw('"quizes" as type')
+                'quizes.type',
+                // 'attendances.id as attendance_id',
+                // 'attendances.attendance',
+                // 'attendances.type as attend_type'
             )
             ->where('student_grades.student_id', $student_id)->paginate(10);
         // dd($student_grade);

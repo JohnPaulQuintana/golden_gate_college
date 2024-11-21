@@ -68,7 +68,7 @@
                             </div>
                             {{-- grade --}}
                             <div class="mb-2 w-full">
-                                <label for="Semester Grade">Student Score:</label>
+                                <label for="Semester Grade">Student Score / Attendance / Major Exam:</label>
                                 <div class="relative">
                                     <input id="search-subjects" name="student_score" type="number" step="0.01"
                                         class="peer py-2 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -86,12 +86,12 @@
                                 </div>
                             </div>
                             {{-- passing score --}}
-                            <div class="mb-2 w-full">
+                            <div class="mb-2 w-full hidden">
                                 <label for="Semester Grade">L.P:</label>
                                 <div class="relative">
                                     <input name="passing_score" id="passing_score" type="number" step="0.01"
                                         class="peer py-2 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        placeholder="Enter Passing Point" required>
+                                        placeholder="Enter Passing Point" value="50">
                                     <div
                                         class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                         <svg class="shrink-0 size-4 text-green dark:text-neutral-500"

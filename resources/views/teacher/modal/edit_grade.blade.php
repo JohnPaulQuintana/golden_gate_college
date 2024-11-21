@@ -15,6 +15,7 @@
             @csrf
             <input type="number" name="grade_id" id="grade_id_input_edit" class="hidden">
             <input type="number" name="student_id" id="student_id_input_edit" class="hidden">
+            <input type="text" name="grade_type" id="grade_type_input_edit" class="hidden">
             <div
                 class="relative flex flex-col bg-white border shadow-sm rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="absolute top-2 end-2">

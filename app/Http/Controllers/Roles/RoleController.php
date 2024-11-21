@@ -80,9 +80,17 @@ class RoleController extends Controller
             ->where('enrolled_student_on_subjects.student_id', Auth::user()->id)
             ->get();
 
-        
+        $defaultRedirect = '.dashboard';
+        // switch ($role) {
+        //     case 'teacher':
+        //         $defaultRedirect = '.my.subject';
+        //         break;
+        //     default:
+        //         # code...
+        //         break;
+        // }
         // dd($subjects);
-        return view($role.'.dashboard', compact('initial','information','liabilities','tags','existingEnrollmentForm', 'totalPaid', 'totalPayable', 'subjects'));
+        return view($role.$defaultRedirect, compact('initial','information','liabilities','tags','existingEnrollmentForm', 'totalPaid', 'totalPayable', 'subjects'));
     }
     
 }

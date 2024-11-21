@@ -19,7 +19,7 @@
                                         d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c1.8 0 3.5-.2 5.3-.5c-76.3-55.1-99.8-141-103.1-200.2c-16.1-4.8-33.1-7.3-50.7-7.3l-91.4 0zm308.8-78.3l-120 48C358 277.4 352 286.2 352 296c0 63.3 25.9 168.8 134.8 214.2c5.9 2.5 12.6 2.5 18.5 0C614.1 464.8 640 359.3 640 296c0-9.8-6-18.6-15.1-22.3l-120-48c-5.7-2.3-12.1-2.3-17.8 0zM591.4 312c-3.9 50.7-27.2 116.7-95.4 149.7l0-187.8L591.4 312z" />
                                 </svg>
 
-                                John Paul Y. Quintana
+                                Add grades to student's
                             </h2>
                             <p class="text-sm text-gray-600 dark:text-neutral-400">
                                 List of new added <span class="font-bold">grade/score's</span> .
@@ -35,10 +35,43 @@
                                     Add Quiz
                                     <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                                 </button> --}}
+                                <button type="button" data-type="exam" data-student_id="{{ $student_id }}"
+                                    class="add_quiz hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                    Major Exam
+                                    <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                                <button type="button" data-type="attendance" data-student_id="{{ $student_id }}"
+                                    class="add_quiz hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                    Attendance
+                                    <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                                <button type="button" data-type="activity" data-student_id="{{ $student_id }}"
+                                    class="add_quiz hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                                    aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                    Act/Exer
+                                    <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
                                 <button type="button" data-type="quiz" data-student_id="{{ $student_id }}"
                                     class="add_quiz hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                                     aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                                    Add Quiz
+                                    Quizes
                                     <svg class="hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -132,7 +165,7 @@
                                     <div class="flex items-center gap-x-2">
                                         <span
                                             class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                            Semester Grade
+                                            Grade Type
                                         </span>
                                     </div>
                                 </th>
@@ -173,6 +206,7 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
 
                             @foreach ($student_grade as $st)
+                            {{-- {{ $st }} --}}
                                 <tr
                                     class="@if ($loop->odd) bg-green-50 dark:bg-neutral-800 @else bg-white dark:bg-neutral-900 @endif">
 
@@ -200,7 +234,7 @@
                                         <div class="px-6 py-3">
                                             <span
                                                 class="block text-sm capitalize font-semibold w-fit bg-slate-100 rounded-md px-2 text-gray-800 dark:text-neutral-200">
-                                                {{ $st->student_grade }}
+                                                {{ $st->type ?? $st->attend_type }}
                                             </span>
                                         </div>
                                     </td>
@@ -231,6 +265,7 @@
                                                     data-student_id="{{ $student_id }}"
                                                     data-score="{{ $st->quiz_score }}"
                                                     data-quiz_id="{{ $st->quiz_id }}"
+                                                    data-type="{{ $st->type }}"
                                                     class="edit_student_grade hover:cursor-pointer">Edit</a>
                                             </span>
                                             {{-- @if (!$st->semester_grade)

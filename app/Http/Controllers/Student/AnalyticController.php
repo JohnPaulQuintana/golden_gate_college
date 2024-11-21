@@ -27,7 +27,7 @@ class AnalyticController extends Controller
         $analytics = StudentGrade::join('subjects', 'student_grades.subject_id', '=', 'subjects.id')
             ->select('student_grades.*', 'subjects.subject_code', 'subjects.subject_name', 'subjects.credits')
             ->where('student_id', Auth::user()->id)->get();
-
+        // dd($analytics);
         // Initialize an empty array to hold the formatted subject data
         $subjectDatas = [];
         // Loop through the analytics data and format it
@@ -40,28 +40,28 @@ class AnalyticController extends Controller
                 $subjectDatas[] = [
                     'subject' => $grade->subject_name,
                     'grade' => [
-                        "Quiz Result" => $grade->quiz_grade,
-                        "First Semester" => null, // Default value for each semester
-                        "Second Semester" => null,
-                        "Summer" => null,
-                        "Summer 1" => null, // Added Summer 1
-                        "Summer 2" => null  // Added Summer 2
+                        "Quiz Result %" => $grade->quiz_grade,
+                        "Activities Result %" => $grade->activities,
+                        "CSCP / Attendance Result %" => $grade->cscp,
+                        "Exam Result %" => $grade->major_exam,
+                        "Final Term %" => $grade->student_grade,
+                        
                     ]
                 ];
                 $subjectKey = count($subjectDatas) - 1; // Get the newly added index
             }
-
+            // dd($subjectDatas);
             // Map the grade to the corresponding semester
             if (strtolower($grade->semester) == 'first semester') {
-                $subjectDatas[$subjectKey]['grade']["First Semester"] = $grade->student_grade;
+                $subjectDatas[$subjectKey]['grade']["First Semester"] = $grade->final_term;
             } elseif (strtolower($grade->semester) == 'second semester') {
-                $subjectDatas[$subjectKey]['grade']["Second Semester"] = $grade->student_grade;
+                $subjectDatas[$subjectKey]['grade']["Second Semester"] = $grade->final_term;
             } elseif (strtolower($grade->semester) == 'summer') {
-                $subjectDatas[$subjectKey]['grade']["Summer"] = $grade->student_grade;
+                $subjectDatas[$subjectKey]['grade']["Summer"] = $grade->final_term;
             } elseif (strtolower($grade->semester) == 'summer 1') {
-                $subjectDatas[$subjectKey]['grade']["Summer 1"] = $grade->student_grade;
+                $subjectDatas[$subjectKey]['grade']["Summer 1"] = $grade->final_term;
             } elseif (strtolower($grade->semester) == 'summer 2') {
-                $subjectDatas[$subjectKey]['grade']["Summer 2"] = $grade->student_grade;
+                $subjectDatas[$subjectKey]['grade']["Summer 2"] = $grade->final_term;
             }
         }
         // dd($subjectDatas);
